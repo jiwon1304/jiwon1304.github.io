@@ -8,7 +8,7 @@ category: OpenGL
 그래픽스를 배우려고 OpenGL을 사용하려는데, 라이브러리라는 것을 처음 쓰려고 하니까 초기 설정하는 것부터 난관이었다. 학교에서는 이런걸 가르쳐주지 않고 그냥 빈칸 채워넣기마냥 과제를 주었기 때문에 직접 찾아봐야 했다.\
 특히나 윈도우도 아니고, x86도 아니다 보니까 찾기가 더 어려웠던 것 같다. 나중에 다시 설치하게 되다면 볼 수 있게 정리해두려고 한다. visual studio, pycharm같은 ide만 써보고 terminal  같이 그 외의 것은 아무도 모르는 사람 기준으로 작성하였다.\
 \
-다음은 [learnopengl.com](https://learnopengl.com/)이라는 무료 OpenGL course을 따라가기 위한 기본사항이고, course의 [Creating a window](https://learnopengl.com/Getting-started/Creating-a-window)를 기준으로 작성했다.
+다음은 [learnopengl.com](https://learnopengl.com/)이라는 무료 OpenGL course을 따라가기 위한 기본사항이고, course의 [Creating a window](https://learnopengl.com/Getting-started/Creating-a-window)를 기준으로 작성하였다.
 
 # 목차
 - [목차](#목차)
@@ -16,7 +16,6 @@ category: OpenGL
   - [1-1. 라이브러리 설치하기](#1-1-라이브러리-설치하기)
     - [GLFW](#glfw)
     - [GLAD](#glad)
-    - [glfw](#glfw-1)
     - [assimp](#assimp)
 - [2. VSCode 설정하기](#2-vscode-설정하기)
     - [제목6](#제목6)
@@ -57,7 +56,7 @@ cd vcpkg-master/
 
 
 ### GLAD
-### glfw
+GLAD는 운영체제마다 이름이 다르게 정해진 OpenGL 함수들을 쉽게 사용할 수 있게 해주는 라이브러리이다. LearnOpenGL에도 나와있는 과정도 쉽기 때문에 내용 그대로 [GLAD](https://glad.dav1d.de)에 들어가서 `3.3`과 `Core`를 선택하고 `GENERATE`를 눌러서 나오는 페이지에서 모두 다운로드 받으면 된다.
 ### assimp
 # 2. VSCode 설정하기
 
