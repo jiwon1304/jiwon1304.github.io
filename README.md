@@ -3,7 +3,10 @@ layout: page
 title: About
 permalink: /about/
 ---
+[LearnOpenGL](https://learnopengl.com)
 
+
+<!-- 
 ## Theme Monos
 > Simple and lightweight theme for Jekyll
 
@@ -30,4 +33,4 @@ date_format: "%Y-%M-%D" //and date format.
 #### Page - Mobile
 ![alt text](/public/img/screenshot-m1.png)
 #### Page - Articles
-![alt text](/public/img/screenshot-m2.png)
+![alt text](/public/img/screenshot-m2.png) -->
