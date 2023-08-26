@@ -3,6 +3,7 @@
 @import url(syntax/monokai.css);
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR&display=swap');
 @import url('https://fonts.googleapis.com/css?family=Nanum+Gothic+Coding:400');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
 
 :root {
   --blue: #007bff;
@@ -75,7 +76,7 @@ pre {
 }
 
 code {
-	font-family: monospace, "Nanum Gothic Coding";
+	font-family: "Roboto Mono", "Nanum Gothic Coding";
 	font-size: 0.8em;
 	margin: 0px;
 	/* color: #f8f8f2;
