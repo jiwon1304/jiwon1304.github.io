@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "ImGui 추가하기"
+# date:   2024-01-12 00:00:00 +0900
+categories: ImGui
+---
+
+[ImGui](https://github.com/ocornut/imgui)를 추가하려고 `/dependencies`에 추가하고 example file
+```json
+"${workspaceFolder}/dependencies/imgui/*.cpp",
+"${workspaceFolder}/dependencies/imgui/backends/imgui_impl_glfw.cpp",
+"${workspaceFolder}/dependencies/imgui/backends/imgui_impl_opengl3.cpp",
+```

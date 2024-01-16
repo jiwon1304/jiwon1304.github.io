@@ -1,0 +1,10 @@
+---
+layout: post
+title:  "키보드 입력 방식"
+date:   2024-01-12 00:00:00 +0900
+categories: opengl
+---
+
+[glfw input guide](https://www.glfw.org/docs/3.3/input_guide.html)에서는 키보드 입력에 관한 함수로 `glfwSetKeyCallback`이라는 콜백 함수를 제공하고 있다. 이렇게 함수를 지정하게 되면 main loop에서 `glPollEvents()`가 실행될 때 키보드가 
+
+버퍼 스왑 이후 event process
