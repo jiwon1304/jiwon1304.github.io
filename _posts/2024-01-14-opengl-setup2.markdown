@@ -139,6 +139,33 @@ int main(){
 "${workspaceFolder}/dependencies/imgui/backends/imgui_impl_opengl3.cpp",
 ```
 
+# Makefile
+ImGui에서 제공한 예시 파일을 보면 glfw3 / OpenGL을 이용할 때의 예시 코드를 제공하고 있다. 여기서 `Makefile`를 확인해보면 vscode에서 사용하는 `tasks.json`과는 조금 다르게 적힌 빌드 옵션을 확인할 수 있다. 
+
+```makefile
+SOURCES = main.cpp
+SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp \
+$(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
+SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
+```
+```makefile
+CXXFLAGS = -std=c++11 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
+```
+```makefile
+LIBS = 
+ifeq ($(UNAME_S), Darwin) #APPLE
+	ECHO_MESSAGE = "Mac OS X"
+	LIBS += -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
+	LIBS += -L/usr/local/lib -L/opt/local/lib -L/opt/homebrew/lib
+	#LIBS += -lglfw3
+	LIBS += -lglfw
+
+	CXXFLAGS += -I/usr/local/include -I/opt/local/include -I/opt/homebrew/include
+	CFLAGS = $(CXXFLAGS)
+endif
+```
+대충 해석해보면 비슷한 의미를 갖는다는 것을 알 수 있다.
+
 # glfw는?
 glfw는 `#include <GLFW/glfw3.h>`으로 `main.cpp`에 헤더파일만 포함시켰을 뿐 g++의 argument로 소스파일을 넘기진 않았다. 대신 shared library를 통해서 코드에 접근한다. argument에서
 ```
