@@ -38,8 +38,7 @@ void Shader::setUniformTexture2D(const std::string name, const GLuint slot, cons
 ```
 그런데 막상 실행을 하면 다음과 같은 오류가 발생한다. 텍스쳐가 쉐이더에 제대로 로딩이 되지 않았을때 뜨는 오류이다. 보통은 잘못된 경로라든지의 경우로 로드 자체가 안된 것이다.
 ```
-UNSUPPORTED (log once): POSSIBLE ISSUE: unit 0 GLD_TEXTURE_INDEX_2D is unloadable and  
-bound to sampler type (Float) - using zero texture because texture unloadable
+UNSUPPORTED (log once): POSSIBLE ISSUE: unit 0 GLD_TEXTURE_INDEX_2D is unloadable and bound to sampler type (Float) - using zero texture because texture unloadable
 ```
 무엇이 문제인지 계속 바꿔보다가 parameter인 `Texture2D texture`를 `Texture2D &texture`로 바꾸면 되는 것이었다. 그래서 pass by value/reference가 문제인가 하고 여러 시도를 해보았는데,
 1. 함수 내에서 `texture`를 새로운 `Texture2D` 인스턴스에 복사해서 실행한다.
