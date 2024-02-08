@@ -57,5 +57,6 @@ heightmap에 무작위 값을 넣고 다시 확인해본다.
 row를 가로지르는 선과 모서리 부분에 의도하지 않은 선이 몇개 보인다. 이 선은 index가 겹치게 되면서 삼각형이 아니라 선분으로 그려진 도형에 해당한다. 
 
 이후 heightmap을 잘 이용해서 각 vertex에 정보를 넣으면 사각형 모양의 지형을 그릴 수 있다.
+
 ---
 참고: [LearnOpenGLES](https://www.learnopengles.com/tag/triangle-strips/)
