@@ -10,11 +10,12 @@
 		<!-- 
 			https://wormwlrm.github.io/2019/09/22/How-to-add-tags-on-Jekyll.html
 		-->
-		<div class="tags">
-			{% if page.tags %} {% for tag in page.tags %} {% if site.data.tags contains tag %}
-				<!-- <span class="tag">{{ site.data.tags-format[tag] }}</span> -->
-				<span class="tag">{{ tag }}</span>
-				{% endif %} {% endfor %} {% endif %}
+		<div>
+			{% for tag in page.tags %}
+			<a class="tags"href="{{ root_url }}/{{ site.tag_dir }}#{{ tag }}">
+				<span>{{ tag }}</span>
+			</a>
+			{% endfor %}
 		</div>
 	</header>
 

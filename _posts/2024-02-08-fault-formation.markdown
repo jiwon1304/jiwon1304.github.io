@@ -9,12 +9,10 @@ Fault Formation는 [단층](https://ko.wikipedia.org/wiki/단층) 형성이라�
   <img src="http://wiki.hash.kr/images/1/1a/단층.png" align="center" width="50%">
   <figcaption align="center">단층의 모습. 단면을 기준으로 한쪽은 올라가고 한쪽은 내려가있다.</figcaption>
 </p>
-\
-\
+<br/>
 단층을 형성하는 방법은 간단하다. 지형 위에 직선을 긋고, 직선 기준으로 한쪽은 올리고 한쪽은 내리면 된다. 이를 반복하다 보면 그럴듯한 지형이 만들어지게 된다.
-\
+<br/>
 무작위 직선이야 아무 두 점을 이으면 얻을 수 있다. 구현을 하기 위해 고민해야 할 것은 어떻게 직선을 기준으로 한쪽은 올리고 한쪽은 내리는가다. 이를 해결하기 위해서 벡터의 외적(cross product)를 사용할 수 있다.
-
 무작위 직선을 구성하는 두 점 p0, p1 그리고 height를 결정할 임의의 점 P에 대해서, (p1 - p0)와 (P - p0) 벡터를 만든다. 두 벡터를 외적하면 나오는 벡터는 y축 방향으로 +또는 -방향을 가리킬 것이다. 이를 통해서 한쪽은 내리고 한쪽은 올릴 수 있다.
 
 ```cpp
@@ -66,8 +64,6 @@ void TerrainFaultFormation::generateFaultFormation(unsigned int iterations, floa
   <img src="/assets/img10.png" align="center" width="100%">
   <figcaption align="center">iteration = 10</figcaption>
 </p>
-\
-\
 충분히 많이 반복하면 다음과 같은 지형이 나온다.
 ![](/assets/img11.png)
 

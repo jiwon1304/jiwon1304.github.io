@@ -4,7 +4,7 @@ title:  "static 변수 사용하기"
 categories: OpenGL
 tags: [opengl, cpp]
 ---
-`shader.setXXX()`를 하고나서 draw를 하면 작동이 되지 않는 상황이 발생했다. 대신 `shader.setXXX()`를 하고서 다시 `shader.use()`를 해야지 제대로 작동했다. 이는 setter의 실행 전후로 `use()`와 `unuse()`가 실행되는데, 이렇게 되면 기존에 사용하던 쉐이더가 무엇인지 간에 무조건 `unuse()`가 실행되기 때문이다.\
+`shader.setXXX()`를 하고나서 draw를 하면 작동이 되지 않는 상황이 발생했다. 대신 `shader.setXXX()`를 하고서 다시 `shader.use()`를 해야지 제대로 작동했다. 이는 setter의 실행 전후로 `use()`와 `unuse()`가 실행되는데, 이렇게 되면 기존에 사용하던 쉐이더가 무엇인지 간에 무조건 `unuse()`가 실행되기 때문이다.  
 따라서 현재 활성화 되어있는 쉐이더를 set 실행 전에 확인하고 set이 끝나면 다시 활성화 시키려고 한다. 이를 위해서 static 변수를 이용해서 이전에/현재 활성화 된 쉐이더의 ID를 저장하도록 한다. 그리고 setter가 끝나면 이전의 쉐이더를 다시 활성화시킨다.
 ```cpp
 void Shader::reuse(){
@@ -14,7 +14,7 @@ void Shader::reuse(){
 }
 ```
 그런데 다음과 같은 오류가 발생한다
-> the object has type qualifiers that are not compatible with the member function "Shader::reuse"\
-> object type is: const Shader\
+> the object has type qualifiers that are not compatible with the member function "Shader::reuse"  
+> object type is: const Shader
 
 const 가 붙어있으면 안에서 호출한 클래스 함수도 const가 있어야 한다. 하지만 `reuse()`에 const를 붙이면 static 변수인 currentShader를 수정할 수 없다. 대신

@@ -3,12 +3,11 @@ layout: post
 title:  "static 변수의 초기화"
 categories: C++
 tags: [trivial]
-
 ---
 
 Diamond-Square method를 구현하였는데, 생각했던 대로 결과가 나오지 않았다. 원했던 것은 어느정도 dynamic함이 있어야 하는데, 그냥 slope하나에 random displacement가 추가된 느낌이었다.
 
-원래 코드에는 random 라이브러리를 이용해서 ```std::uniform_real_distribution```를 이용했다. 한 step씩 하면서 square사이즈가 줄어들 때마다 random value의 범위를 줄이기 위해서 다음과 같이 했다.
+원래 코드에는 random 라이브러리를 이용해서 `std::uniform_real_distribution`를 이용했다. 한 step씩 하면서 square사이즈가 줄어들 때마다 random value의 범위를 줄이기 위해서 다음과 같이 했다.
 ```cpp
 std::uniform_real_distribution<float> randomDisplacement(-initialDisplacement, +initialDisplacement);
 ```
