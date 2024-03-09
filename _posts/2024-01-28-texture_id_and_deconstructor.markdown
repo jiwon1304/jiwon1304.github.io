@@ -2,6 +2,7 @@
 layout: post
 title:  "texture id와 소멸자"
 categories: OpenGL
+tags: [opengl, cpp]
 ---
 
 > [요약]\

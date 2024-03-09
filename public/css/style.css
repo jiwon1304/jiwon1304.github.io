@@ -286,6 +286,13 @@ header.home {
 	width: 80px;
 }
 
+.tags{
+	font-size: 0.8em;
+	color: #888888;
+	text-transform: lowercase;
+}
+
+
 .author .author-image {
   float: left;
   margin-right: 20px;

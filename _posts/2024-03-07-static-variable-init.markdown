@@ -2,6 +2,8 @@
 layout: post
 title:  "static 변수의 초기화"
 categories: C++
+tags: [trivial]
+
 ---
 
 Diamond-Square method를 구현하였는데, 생각했던 대로 결과가 나오지 않았다. 원했던 것은 어느정도 dynamic함이 있어야 하는데, 그냥 slope하나에 random displacement가 추가된 느낌이었다.
@@ -59,4 +61,4 @@ Loop end
 destructor
 ```
 
-실행 결과대로, static이 붙었을 경우에는 다른 값이 들어오더라도 객체를 새로 만들지 않고 무시하게 된다. static의 역할을 충실히 하고 있다. 또한 static variable의 constructor는 처음 실행된 라인에서 실행되지만, [destuctor는 main함수가 끝날 때 실행됨을 알 수 있다.](https://stackoverflow.com/questions/69718679/what-is-the-order-of-destruction-for-static-objects-and-global-objects)
+실행 결과대로, static이 붙었을 경우에는 다른 값이 들어오더라도 객체를 새로 만들지 않고 무시하게 된다. static의 역할을 충실히 하고 있다. 또한 static variable의 constructor는 처음 실행된 라인에서 실행되지만, [destuctor는 main함수가 끝날 때 실행됨을 알 수 있다.](https://stackoverflow.com/questions/2204608/does-c-call-destructors-for-global-and-class-static-variables)

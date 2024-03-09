@@ -1,7 +1,8 @@
 ---
 layout: post
 title:  "Smoothing Terrain"
-categories: Terrain
+categories: OpenGL
+tags: [opengl, terrain]
 ---
 무작위로 지형을 만들다보면 높이가 너무 튀는 경우가 생긴다. 
 ![](/assets/img12.png)

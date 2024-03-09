@@ -1,7 +1,8 @@
 ---
 layout: post
 title:  "Fault Formation"
-categories: Terrain
+categories: OpenGL
+tags: [opengl, terrain]
 ---
 Fault Formation는 [단층](https://ko.wikipedia.org/wiki/단층) 형성이라는 뜻으로, 지진 등으로 인해 지각이 끊어지며 수직 운동하게 되는 현상을 본따서 지형을 생성하는 방법이다.
 <p align="center">

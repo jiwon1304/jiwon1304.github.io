@@ -1,7 +1,8 @@
 ---
 layout: post
 title:  "Trinagle Strip으로 지형 만들기"
-categories: Terrain
+categories: OpenGL
+tags: [opengl, terrain]
 ---
 
 게임과 같은 3D 공간에서 지형을 그릴 때 Y축 높이의 값인 heightmap을 통해서 지형을 생성할 수 있다. heightmap에 저장된 값을 x,z좌표에 적절히 대응시키면 지형의 각 좌표를 얻을 수 있다. 이를 화면에 띄우기 위해서는 각 좌표가 삼각형의 꼭짓점이 되도록 그려야 한다. 예를 들어서 좌표 (0,0), (1,0), (0,1), (1,1)에는 다음과 같이 삼각형을 그려서 사각형 지형을 그릴 수 있다.

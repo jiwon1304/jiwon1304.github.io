@@ -7,6 +7,15 @@
 			{%- assign date_format = site.date_forma | default: "%Y/%m/%d" -%}
 			{{ page.date | date: date_format }}
 		</time>		
+		<!-- 
+			https://wormwlrm.github.io/2019/09/22/How-to-add-tags-on-Jekyll.html
+		-->
+		<div class="tags">
+			{% if page.tags %} {% for tag in page.tags %} {% if site.data.tags contains tag %}
+				<!-- <span class="tag">{{ site.data.tags-format[tag] }}</span> -->
+				<span class="tag">{{ tag }}</span>
+				{% endif %} {% endfor %} {% endif %}
+		</div>
 	</header>
 
 	<div class="post-content">

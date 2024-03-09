@@ -2,6 +2,7 @@
 layout: post
 title:  "new 이용 시 초기화"
 categories: C++
+tags: [cpp, trivial]
 ---
 지형을 만들다보면 가끔 이상한 현상이 발생한다.
 

@@ -2,6 +2,7 @@
 layout: post
 title:  "ImGui 적용기"
 categories: OpenGL
+tags: [opengl, trivial]
 ---
 
 ImGui를 추가하면서 사용한 `tasks.json`이다.
