@@ -88,6 +88,10 @@ code {
 	margin: 3px;
 }
 
+.highlight{
+	display: flex;
+}
+
 .container {
 	min-height: 100%;
 	display: flex;
@@ -99,6 +103,7 @@ code {
 	/*margin-left: 180px;*/
 	flex: 1 1 auto;
 	padding: 0px 30px;
+	width: 1px;
 }
 
 .sidebar {
@@ -217,7 +222,10 @@ article {
 	font-size: 17px;
 	margin-bottom: 100px;
 	line-height: 1.9;
+	max-width: calc(100vw - 200px - 5%);
+	margin-right: 0px;
 }
+
 
 article.home div a, article.home pre a { color: #2c3e50; }
 article.home div a:hover, article.home pre a:hover { color: #2c3e50; text-decoration: none; }
@@ -321,6 +329,7 @@ footer {
 	article {
 		font-size: 0.9em;
 		line-height: 1.5;
+		width: calc(100dvw - 5%);
 	}
 
 	.content {
@@ -353,6 +362,9 @@ footer {
 		flex: 0 0 0px;
 		visibility: hidden;
 		display: none;
+	}
+	.highlight {
+		max-width: 100%;
 	}
 }
 

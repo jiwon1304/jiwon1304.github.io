@@ -158,8 +158,8 @@ void TerrainDiaSqRecursive::stepRecursive(int topLeftX, int topLeftZ, int square
 그러면 이런 결과가 나온다.
 ![](/assets/img21.png)
 격자 모양이 나오게 되는데, 이는 재귀를 이용하면 depth-first로 계산되기 떄문이다.
-square step을 하려면 영역 밖의 높이도 sampling하게 되는데, 만약 재귀를 이용한다면 영역 밖의 높이는 아직 계산되지 않았으므로 0을 이용하게 된다.
-따라서 재귀를 이용하기보다는 반복문을 이용해야 한다.
+square step을 하려면 영역 밖의 높이도 sampling하게 되는데, 만약 재귀를 이용한다면 정사각형 영역 밖의 높이가 계산이 되어있지 않은 상태일수도 있다. 이로인해 격자 모양이 나타나게 된다. 
+따라서 재귀를 이용하기보다는 반복문을 이용해서 breadth-first로 계산해야 한다.
 
 ```cpp
 void TerrainDiaSq::generate(float roughness, float initialDisplacement){
@@ -200,6 +200,8 @@ void TerrainDiaSq::squareStep(unsigned int squareSize, float randomDisplacementI
     }
 }
 ```
+
+![](/assets/img22.png)
 
 
 ---
