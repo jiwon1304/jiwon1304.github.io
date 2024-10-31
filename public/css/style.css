@@ -150,9 +150,9 @@ code {
 }
 
 .sidebar-brand > a {
-	font-size: 300%;
-	font-family: 'Gelasio';
-	color: #fff;
+	font-size: 200%;
+	font-family: "Pretendard-Regular", "Noto Sans";
+	color: #EEE;
 }
 
 .lead {
@@ -410,3 +410,8 @@ footer {
 	}
 }
 
+
+img + em {
+	display: block;
+	text-align: center;
+  }
