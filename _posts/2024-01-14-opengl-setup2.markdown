@@ -198,4 +198,4 @@ glfw는 `#include <GLFW/glfw3.h>`으로 `main.cpp`에 헤더파일만 포함시�
  */
 GLFWAPI GLFWwindow* glfwGetCurrentContext(void);
 ```
-선언이랑 주석만 줄줄히 달려있고 정의는 되어있지 않다. 아마 `libglfw.dylib`정의되어있나 보다. 뭔가 더 찾아보고 싶은데 너무 복잡한 것 같다. 학교에선 언제 이런걸 알려주려나...
+선언이랑 주석만 줄줄히 달려있고 정의는 되어있지 않다. 아마 `libglfw.dylib`정의되어있나 보다.
