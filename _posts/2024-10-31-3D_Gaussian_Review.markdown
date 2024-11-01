@@ -5,6 +5,7 @@ categories: Papers
 tags: [paper]
 ---
 <img src="/assets/img31.png" align="center" >
+
 > Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 2023. 3D Gaussian Splatting for Real-Time Radiance Field Rendering. ACM Trans. Graph. 42, 4, Article 1 (August 2023), 14 pages. [https://doi.org/10.1145/3592433](https://doi.org/10.1145/3592433)
 
 # Overview
