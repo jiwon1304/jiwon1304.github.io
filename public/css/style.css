@@ -278,6 +278,14 @@ article h6 {
   	margin-bottom: 0;
 }
 
+article h2 {
+	font-size: larger
+}
+
+article h3 {
+	font-size: large
+}
+
 article.home h1 a,
 article.home h2 a,
 article.home h3 a,
