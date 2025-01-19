@@ -40,8 +40,9 @@ Windows 개발 환경에서 `LPSTR`은 Long Pointer String을 의미하며 `char
 
 # `int nCmdShow`
 프로그램이 처음 실행될 때 윈도우가 어떤 크기로(최대화, 최소화, 보통) 켜지는지 알려준다. 다른 프로그램에 의해서 실행될 때에나 유용하다. 
-
+<br><br>
 이후 전달받은 `hInstance`를 통해서 윈도우를 생성하고, OS로부터의 메세지(마우스 움직임, 타이머 등등의 OS를 통해서 들어오는 모든 input)를 받는다.
+
 ---
 출처:
 https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp
