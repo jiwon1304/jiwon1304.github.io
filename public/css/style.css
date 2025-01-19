@@ -83,7 +83,8 @@ body {
 	margin: 0;
 	padding: 0;
 	font-family: "Pretendard-Regular", "Noto Sans";
-	color: #2c3e50;
+	/* color: #2c3e50; */
+	color: #000000
 }
 
 a {
@@ -241,14 +242,13 @@ article .share .gplus:hover {
 }
 
 article {
-	padding: 0 5% 0;
-	font-size: 17px;
+	padding: 0 3% 0;
+	font-size: 16px;
 	margin-bottom: 100px;
-	line-height: 1.9;
+	line-height: 1.8;
 	max-width: calc(100vw - 200px - 5%);
 	margin-right: 0px;
 }
-
 
 article.home div a, article.home pre a { color: #2c3e50; }
 article.home div a:hover, article.home pre a:hover { color: #2c3e50; text-decoration: none; }
@@ -273,7 +273,7 @@ article h3,
 article h4,
 article h5,
 article h6 {
-	font-family: "Roboto", "Nanum Gothic";
+	font-family: "Pretendard-Regular", "Roboto", "Nanum Gothic";
 	color: #333;
   	margin-bottom: 0;
 }

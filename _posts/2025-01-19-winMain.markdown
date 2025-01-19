@@ -1,26 +1,50 @@
 ---
 layout: post
-title:  "winMain() �Լ�"
+title:  "winMain() 함수"
 categories: win32
 tags: [win32]
 ---
-console���� �۵��ϴ� Win32 ���ø����̼ǿ��� 
+console에서 작동하는 binary code는 `main`함수로부터 시작된다. 반면 Win32 어플리케이션에서는 `WinMain`이라는 함수로부터 어플리케이션이 시작된다.
+`WinMain`도 `int main(int argc, char* argv[])`과 동일하게 파라미터와 리턴 타입이 정해져있다. 
+
 ```cpp
-int WINAPI WinMain(HINSTANCE hInstance,
-                   HINSTANCE hPrevInstance,
-                   LPSTR lpCmdLine,
-                   int nCmdShow
-                   }
+int WINAPI wWinMain( _In_ HINSTANCE hInstance,
+                     _In_opt_ HINSTANCE hPrevInstance,
+                     _In_ LPWSTR lpCmdLine,
+                     _In_ int nCmdShow )
+
 ```
 # `WINAPI`
-�Լ��� ȣ���� �� �μ��� ��� �����ϴ���, ���� �����ʹ� ���� �����ϴ��� ���� ��Ģ�� ���س��� ���� ȣ�� �Ծ�(calling convention)�̶�� �Ѵ�.
-`__cdecl`, `__stdcall`, `__fastcall`���� �ִ�. `WinMain`������ `WINAPI` = `APIENTRY` = `__stdcall`�̴�.
+함수를 호출할 때 인수는 어떻게 전달하는지, 스택 포인터는 누가 변경하는지 등의 규칙을 정해놓은 것을 호출 규약(calling convention)이라고 한다.
+`__cdecl`, `__stdcall`, `__fastcall`등이 있다. `WinMain`에서의 `WINAPI` = `APIENTRY` = `__stdcall`이다.
 
-`main()`(caller)���� `func()`(callee)�� ȣ���Ѵٰ� ���� ��,
-- ������� ���ؿ���, `__stdcall`�� callee�� stack pointer�� ����ġ�� �������´�. Windows API�� �Լ����� �� ����� ����Ѵ�.
-- `__cdecl`�� �ݴ�� caller�� callee�� `ret` ���� stack pointer�� ����ġ�� �������´�. ���� �μ� �Լ��� �� ����� ����ؾ��Ѵ�. callee�� stack pointer�� �󸶳� ���������ϴ��� �̸� �� �� ���� �����̴�. (ȣ��Ǿ��� �� �� �� �ֱ� ����) ���� ���� ���Ǵ� ȣ�� �Ծ��̴�.
-- `__fastcall`�� ���� �ΰ��� �ٸ���, �μ� �Ϻθ� �������͸� ���ؼ� �����Ѵ�. `__stdcall`�� `__cdecl`�� ������ ���ؼ� �����Ѵ�.
+`main()`(caller)에서 `func()`(callee)를 호출한다고 했을 때,
+- 어셈블리 수준에서, `__stdcall`은 callee가 `ret` 하기 전에 stack pointer를 원위치로 돌려놓는다. Windows API의 함수들은 이 방식을 사용한다. 호출되는
+- `__cdecl`은 반대로 caller가 callee의 `ret` 이후 stack pointer를 원위치로 돌려놓는다. 가변 인수 함수(`printf`같은 함수)는 이 방법을 사용해야한다. callee가 stack pointer를 얼마나 돌려놔야하는지 미리 알 수 없기 때문이다(호출되었을 때 알 수 있기 때문). 주로 사용되는 호출 규약이다.
+- `__fastcall`은 위의 두개와 다르게, 인수 일부를 레지스터를 통해서 전달한다. `__stdcall`과 `__cdecl`은 스택을 통해서 전달한다.
 
+# `_In_`, `_In_opt`
+[Microsoft SAL(코드 주석 언어)](https://learn.microsoft.com/ko-kr/cpp/code-quality/understanding-sal?view=msvc-170)에서 이용하는 매크로로, 컴파일러에게 해당 파라미터가 어떻게 이용될 것인지 힌트를 준다. `_In_`은 매개변수(parameter)가 읽기 전용으로 처리됨을 의미하고, `_In_opt_`는 해당 매개변수가 선택적으로(optional) 사용됨을 의미한다. 여기서 "읽기 전용", "선택적"은 syntax가 아닌 semantics이기 때문에 코드를 작성하는데 도움을 줄 뿐, 컴파일러가 강제하진 않는다. 다만, Windows API를 이용할 때 `_In_`이 붙은 매개변수가 읽기 전용인 데이터를 가리키고 있다면 문제가 발생할 수 있겠다.
 
+# 핸들
+핸들(handle)은 운영체제(Windows)에서 식별되고 제어되는 리소스를 향하는 reference이다. 유저 프로그램이 직접 커널의 일부분(윈도우(프레임), 파일 입출력, ...)을 접근하는 것을 막기 위해서, 운영체제는 핸들이라는 형태로 이러한 오브젝트로의 추상적인 포인터를 제공한다. 실제 값은 정수 값이며, 오브젝트의 실제 메모리 주소를 가리키는 것은 아니다. `h`라는 접두사를 이용한다.
+
+# `HINSTANCE hInstance`
+현재 실행되는 프로그램(프로세스의)의 인스턴스(고유 번호) 핸들이다. 많은 API가 호출될 때 인스턴스를 요구하기 때문에 주로 전역 변수에 저장한다.
+
+# `HINSTANCE hPrevInstance`
+이전에 실행되던 프로그램의 인스턴스 핸들이다. 지금은 사용되지 않고 항상 `NULL`값이다.
+
+# `LPSTR lpCmdLine`
+Windows 개발 환경에서 `LPSTR`은 Long Pointer String을 의미하며 `char*`와 동일하다. 도스나 터미널로 입력된 프로그램 인수이다. `argv`랑 같은 역할이다. 
+
+# `int nCmdShow`
+프로그램이 처음 실행될 때 윈도우가 어떤 크기로(최대화, 최소화, 보통) 켜지는지 알려준다. 다른 프로그램에 의해서 실행될 때에나 유용하다. 
+
+이후 전달받은 `hInstance`를 통해서 윈도우를 생성하고, OS로부터의 메세지(마우스 움직임, 타이머 등등의 OS를 통해서 들어오는 모든 input)를 받는다.
 ---
-��ó : http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2
+출처:
+https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp
+https://stackoverflow.com/questions/902967/what-is-a-windows-handle
+http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2
+https://chanos.tistory.com/entry/Windows-API-Win32-API의-기본구조-WinMain-2
