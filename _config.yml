@@ -30,7 +30,7 @@ svg:
   optimize: true
 # Build settings
 # theme: minima
-highlighter-theme: monokai
+highlighter-theme: vs
 date_format: "%Y-%M-%D"
 plugins:
   - jekyll-feed
@@ -44,6 +44,10 @@ highlighter: rouge
 lsi: false
 excerpt_separator: "\n\n"
 incremental: false
+
+kramdown:
+  syntax_highlighter: rouge
+  input: GFM
 
 
 # Exclude from processing.

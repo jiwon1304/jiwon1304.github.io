@@ -1,18 +1,17 @@
 ---
 layout: post
-title:  "winMain() 함수"
+title:  "wWinMain() 함수"
 categories: win32
 tags: [win32]
 ---
-console에서 작동하는 binary code는 `main`함수로부터 시작된다. 반면 Win32 어플리케이션에서는 `WinMain`이라는 함수로부터 어플리케이션이 시작된다.
-`WinMain`도 `int main(int argc, char* argv[])`과 동일하게 파라미터와 리턴 타입이 정해져있다. 
+console에서 작동하는 binary code는 `main`함수로부터 시작된다. 반면 Win32 어플리케이션에서는 `wWinMain`이라는 함수로부터 어플리케이션이 시작된다.
+`wWinMain`도 `int main(int argc, char* argv[])`과 동일하게 파라미터와 리턴 타입이 정해져있다.
 
 ```cpp
 int WINAPI wWinMain( _In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR lpCmdLine,
                      _In_ int nCmdShow )
-
 ```
 # `WINAPI`
 함수를 호출할 때 인수는 어떻게 전달하는지, 스택 포인터는 누가 변경하는지 등의 규칙을 정해놓은 것을 호출 규약(calling convention)이라고 한다.
@@ -30,7 +29,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance,
 핸들(handle)은 운영체제(Windows)에서 식별되고 제어되는 리소스를 향하는 reference이다. 유저 프로그램이 직접 커널의 일부분(윈도우(프레임), 파일 입출력, ...)을 접근하는 것을 막기 위해서, 운영체제는 핸들이라는 형태로 이러한 오브젝트로의 추상적인 포인터를 제공한다. 실제 값은 정수 값이며, 오브젝트의 실제 메모리 주소를 가리키는 것은 아니다. `h`라는 접두사를 이용한다.
 
 # `HINSTANCE hInstance`
-현재 실행되는 프로그램(프로세스의)의 인스턴스(고유 번호) 핸들이다. 많은 API가 호출될 때 인스턴스를 요구하기 때문에 주로 전역 변수에 저장한다.
+현재 실행되는 프로그램(프로세스의)의 인스턴스(고유 번호) 핸들이다. API가 호출될 때 인스턴스를 요구하기 때문에 주로 전역 변수에 저장한다.
 
 # `HINSTANCE hPrevInstance`
 이전에 실행되던 프로그램의 인스턴스 핸들이다. 지금은 사용되지 않고 항상 `NULL`값이다.
@@ -40,12 +39,52 @@ Windows 개발 환경에서 `LPSTR`은 Long Pointer String을 의미하며 `char
 
 # `int nCmdShow`
 프로그램이 처음 실행될 때 윈도우가 어떤 크기로(최대화, 최소화, 보통) 켜지는지 알려준다. 다른 프로그램에 의해서 실행될 때에나 유용하다. 
-<br><br>
-이후 전달받은 `hInstance`를 통해서 윈도우를 생성하고, OS로부터의 메세지(마우스 움직임, 타이머 등등의 OS를 통해서 들어오는 모든 input)를 받는다.
+
+이후 전달받은 `hInstance`를 통해서 윈도우를 생성하고, OS로부터의 메세지(마우스 움직임, 타이머 등등의 OS를 통해서 들어오는 모든 input)를 받는다. 다음은 [예시 코드](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp)이다. 프로그램이 실행된 직후 윈도우 클래스과 directx를 위한 device 초기화를 진행한다. `InitWindow`가 `wWinMain`에서 받은 파라미터를 그대로 이용하는 것을 볼 수 있다.
+
+```cpp
+int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
+{
+    UNREFERENCED_PARAMETER( hPrevInstance );
+    UNREFERENCED_PARAMETER( lpCmdLine );
+
+    if( FAILED( InitWindow( hInstance, nCmdShow ) ) )
+        return 0;
+
+    if( FAILED( InitDevice() ) )
+    {
+        CleanupDevice();
+        return 0;
+    }
+
+    // Main message loop
+    MSG msg = {0};
+    while( WM_QUIT != msg.message )
+    {
+        if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
+        {
+            TranslateMessage( &msg );
+            DispatchMessage( &msg );
+        }
+        else
+        {
+            Render();
+        }
+    }
+
+    CleanupDevice();
+
+    return ( int )msg.wParam;
+}
+```
 
 ---
 출처:
-https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp
-https://stackoverflow.com/questions/902967/what-is-a-windows-handle
-http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2
-https://chanos.tistory.com/entry/Windows-API-Win32-API의-기본구조-WinMain-2
+
+<https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp>
+
+<https://stackoverflow.com/questions/902967/what-is-a-windows-handle>
+
+<http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2>
+
+<https://chanos.tistory.com/entry/Windows-API-Win32-API의-기본구조-WinMain-2>

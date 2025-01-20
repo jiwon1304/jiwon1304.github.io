@@ -15,7 +15,7 @@
 <div class="sidebar-item sidebar-nav">
 	<ul class="nav">
       <li class="nav-title">Pages</li>
-	  <a rel="me" class="nav-item" href="https://jiwon1304.github.io/cv/">CV</a>
+	  <!-- <a rel="me" class="nav-item" href="https://jiwon1304.github.io/cv/">CV</a> -->
 	  <li>
 	  	<a class="nav-item" href="/">Articles</a>
 	  </li>
@@ -39,7 +39,7 @@
 
 <div class="sidebar-item sidebar-nav">
 	<ul class="nav">
-		  <li class="nav-title">Categories</li>
+		  <li class="nav-title">카테고리</li>
 	  {% for category in site.categories %}
 	  <li>
 		  <a class="nav-item" href="{{ root_url }}/{{ site.category_dir }}#{{ category | first }}">
@@ -54,7 +54,7 @@
 
 <div class="sidebar-item sidebar-nav">
 	<ul class="nav">
-		  <li class="nav-title">Tags</li>
+		  <li class="nav-title">태그</li>
 	  {% for tag in site.tags %}
 		  <a class="nav-item" href="{{ root_url }}/{{ site.tag_dir }}#{{ tag | first }}">
 			  <span class="tags">{{ tag | first }}</span>
