@@ -203,9 +203,11 @@ a.nav-item:hover { color: #777; }
 }
 
 .post-link {
-	margin-left: 10px;
+	margin-left: 5px;
 	font-size: 110%;
 	color: #333;
+	/* display: inline-block; */
+	/* width: 80px; */	
 }
 
 #contact-list li .fa,
@@ -351,15 +353,15 @@ header.home {
 	color: #555;
 	letter-spacing: 1px;
 	font-size: 0.8em;
-	display: inline-block;
-	width: 80px;
+	/* display: inline-block; */
+	/* width: 80px; */
 }
 
 .tags{
-	font-size:80%;
+	font-size:90%;
 	color: #888888;
-	padding-right: 0.1em;
-	text-transform: lowercase;
+	padding-right: 0.5em;
+	/* text-transform: lowercase; */
 }
 
 
@@ -385,7 +387,7 @@ footer {
 	color: #ccc;
 }
 
-
+/* 모바일 */
 @media (max-width: 576px) {
 	article {
 		font-size: 0.9em;
@@ -408,11 +410,12 @@ footer {
 	}
 
 	.sidebar-nav {
-		margin: 0px;
+		margin: 10px;
 	}
 
 	.sidebar-item {
 		flex: 1 1 auto;
+		min-width: 15vw;
 	}
 
 	.sidebar-header {
