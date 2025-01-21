@@ -100,7 +100,7 @@ a:hover {
 }
 
 pre {
-	display: block;
+	display:w block;
 	overflow: auto;
 	margin-bottom: 15px;
 	padding-bottom: 10px;
@@ -400,7 +400,7 @@ footer {
 	}
 
 	code {
-		font-size: 90%;
+		font-size: 0.8em;
 	}
 
 	header.post-header {

@@ -79,6 +79,8 @@ typedef struct tagWNDCLASSEXW {
 참고로 구조체 이름의 접미사인 `W`와 `A`는 내부에서 문자열을 unicode(w) 방식으로 처리할 것인지, ascii(a) 방식으로 처리할 것인지의 차이이다. 현재는 `A`를 를 써도 `W`로 변환되어서 처리된다고 한다. 구조체를 구성하는 멤버들은 [이 문서](https://learn.microsoft.com/ko-kr/windows/win32/api/winuser/ns-winuser-wndclassexw)를 참고하자. 이 중 중요한것만 고르자면
 `lpfnWndProc`, `hInstance`, `lpszClassName`이 있다.
 
+## `lpfnWndProc`
+윈도우는 
 ---
 
 출처:
