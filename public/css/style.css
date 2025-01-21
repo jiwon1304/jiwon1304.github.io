@@ -392,7 +392,7 @@ footer {
 @media (max-width: 576px) {
 /* @media { */
 	article {
-		font-size: 0.9em;
+		/* font-size: 0.9em; */
 		line-height: 1.5;
 		width: calc(100dvw - 5%);
 		word-wrap: break-word;
@@ -495,3 +495,26 @@ img + em {
 	display: block;
 	text-align: center;
   }
+
+
+/* 표 관련 */
+table {
+    border: 1px solid #dadce0;
+    border-collapse: collapse;
+}
+
+table thead tr {
+    background: rgba(0, 0, 0, 0.05);
+    /* font-size: 16px; */
+    color: #000;
+}
+
+table tr th,
+table tr td {
+    padding: 7px;
+    border-left: 1px solid #dadce0;
+}
+
+table tr {
+    border-bottom: 1px solid #dadce0;
+}

@@ -58,7 +58,7 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 ```
 
 # `WNDCLASSEX`
-윈도우 클래스는 [`WNDCLASS`](https://learn.microsoft.com/ko-kr/windows/win32/api/winuser/ns-winuser-wndclassexw)라는 구조체에 속성을 담아서 등록할 수 있다.
+윈도우 클래스는 `WNDCLASS`라는 구조체에 속성을 담아서 등록할 수 있다.
 ```cpp
 typedef struct tagWNDCLASSEXW {
   UINT      cbSize;
@@ -75,10 +75,11 @@ typedef struct tagWNDCLASSEXW {
   HICON     hIconSm;
 } WNDCLASSEXW, *PWNDCLASSEXW, *NPWNDCLASSEXW, *LPWNDCLASSEXW;
 ```
-참고로 구조체 이름의 접미사인 `W`와 `A`는 내부에서 문자열을 unicode(w) 방식으로 처리할 것인지, ascii(a) 방식으로 처리할 것인지의 차이이다. 
 
+참고로 구조체 이름의 접미사인 `W`와 `A`는 내부에서 문자열을 unicode(w) 방식으로 처리할 것인지, ascii(a) 방식으로 처리할 것인지의 차이이다. 현재는 `A`를 를 써도 `W`로 변환되어서 처리된다고 한다. 구조체를 구성하는 멤버들은 [이 문서](https://learn.microsoft.com/ko-kr/windows/win32/api/winuser/ns-winuser-wndclassexw)를 참고하자.
 
 ---
+
 출처:
 <https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp>
 <https://stackoverflow.com/questions/902967/what-is-a-windows-handle>
