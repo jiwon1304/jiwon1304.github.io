@@ -12,56 +12,60 @@
 	{%- endif -%} -->
 </div>
 
-<div class="sidebar-item sidebar-nav">
-	<ul class="nav">
-      <li class="nav-title">Pages</li>
-	  <!-- <a rel="me" class="nav-item" href="https://jiwon1304.github.io/cv/">CV</a> -->
-	  <li>
-	  	<a class="nav-item" href="/">전체 글</a>
-	  </li>
-	  {% assign pages_list = site.pages %}
-	  {% for node in pages_list %}
-	    {% if node.title != null %}
-	      {% if node.layout == "page" %}
-	        <li>
-	        	<a class="nav-item" href="{{ node.url }}">
-	            	{{ node.title }}
-	            </a>
-	        </li>
-	      {% endif %}
-		  <!-- node.layout == 'cv' -->
-	    {% endif %}
-	  {% endfor %}
+<div class="sidebar-nav-container">
+	<div class="sidebar-item sidebar-nav">
+		<ul class="nav">
+		<li class="nav-title">Pages</li>
+		<!-- <a rel="me" class="nav-item" href="https://jiwon1304.github.io/cv/">CV</a> -->
+		<li>
+			<a class="nav-item" href="/">전체 글</a>
+		</li>
+		{% assign pages_list = site.pages %}
+		{% for node in pages_list %}
+			{% if node.title != null %}
+			{% if node.layout == "page" %}
+				<li>
+					<a class="nav-item" href="{{ node.url }}">
+						{{ node.title }}
+					</a>
+				</li>
+			{% endif %}
+			<!-- node.layout == 'cv' -->
+			{% endif %}
+		{% endfor %}
+		</ul>
+	</div>
+
+
+
+	<div class="sidebar-item sidebar-nav">
+		<ul class="nav">
+			<li class="nav-title">카테고리</li>
+		{% for category in site.categories %}
+		<li>
+			<a class="nav-item" href="{{ root_url }}/{{ site.category_dir }}#{{ category | first }}">
+				<span class="name">{{ category | first }}</span>
+				<span class="badge">{{ category | last | size }}</span>
+			</a>
+		</li>
+		{% endfor %}
+		</nav>
 	</ul>
-</div>
+	</div>
 
-
-
-<div class="sidebar-item sidebar-nav">
-	<ul class="nav">
-		  <li class="nav-title">카테고리</li>
-	  {% for category in site.categories %}
-	  <li>
-		  <a class="nav-item" href="{{ root_url }}/{{ site.category_dir }}#{{ category | first }}">
-			  <span class="name">{{ category | first }}</span>
-			  <span class="badge">{{ category | last | size }}</span>
-		  </a>
-	   </li>
-	  {% endfor %}
-	</nav>
-  </ul>
-</div>
-
-<div class="sidebar-item sidebar-nav">
-	<ul class="nav">
-		  <li class="nav-title">태그</li>
-	  {% for tag in site.tags %}
-		  <a class="nav-item" href="{{ root_url }}/{{ site.tag_dir }}#{{ tag | first }}">
-			  <span class="tags">{{ tag | first }}</span>
-		  </a>
-	  {% endfor %}
-	</nav>
-  </ul>
+	<div class="sidebar-item sidebar-nav">
+		<ul class="nav">
+			<li class="nav-title">태그</li>
+				<div class="nav-item-block">
+					{% for tag in site.tags %}
+						<a class="nav-item" href="{{ root_url }}/{{ site.tag_dir }}#{{ tag | first }}">
+							<span class="tags">{{ tag | first }}</span>
+						</a>
+					{% endfor %}
+				</div>
+		</nav>
+	</ul>
+	</div>
 </div>
 
 <!-- my tags

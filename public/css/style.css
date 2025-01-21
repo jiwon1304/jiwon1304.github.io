@@ -389,13 +389,29 @@ footer {
 
 /* 모바일 */
 @media (max-width: 576px) {
+/* @media { */
 	article {
 		font-size: 0.9em;
 		line-height: 1.5;
 		width: calc(100dvw - 5%);
+		word-wrap: break-word;
 	}
 
-	.code
+	header.post-header {
+		padding: 10px 5px 10px 5px;
+		margin-bottom: 10px;
+	}
+	code { 
+		font-size: 0.9em;
+	}
+
+	.post-list {
+		padding-left: 2rem;
+		padding-right: 2rem;
+	}
+	.post-list-item {
+		padding: 0.2em;
+	}
 
 	.content {
 		padding: 0px;
@@ -409,15 +425,57 @@ footer {
 		flex: 0 0 auto;
 		flex-flow: row nowrap;
 		height: auto;
+		display: flex;
+		flex-direction: column;
 	}
 
+	.sidebar-nav-container {
+		display: flex;
+		flex-direction: row;
+	}
 	.sidebar-nav {
 		margin: 10px;
+		display: flex;
+		flex-direction: row;
 	}
 
 	.sidebar-item {
 		flex: 1 1 auto;
-		min-width: 20vw;
+		/* min-width: 20vw; */
+		white-space: nowrap;
+		display: inline-block;
+		width: auto;
+	}
+
+	/* nav는 세로로 배치되고, flexbox를 사용하여 자식 요소들이 세로로 정렬되도록 함 */
+	.nav {
+		display: flex;
+		flex-direction: column; /* 세로 정렬 */
+		padding-left: 0;
+	}
+	
+	/* nav-title은 한 줄로 표시되도록 설정 */
+	.nav-title {
+		display: block; /* 기본적으로 한 줄로 나옴 */
+		font-weight: bold; /* 강조를 위해 글씨를 굵게 */
+	}
+	
+	/* nav-item의 li 요소는 기본적으로 블록 요소로 설정해서 줄바꿈 */
+	.nav-item li {
+		display: block; /* li는 블록 요소로 처리하여 한 줄에 하나씩 표시 */
+		margin-bottom: 5px; /* 항목들 사이에 간격 추가 */
+	}
+	
+	.nav-item-block {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	/* nav-item 안의 a 태그는 가로로 배치되며, 너무 길면 줄바꿈되도록 설정 */
+	.nav-item a {
+		/* display: inline-block; a 태그가 가로로 배치되게 함
+		margin-right: 10px; 간격 추가 */
+		word-wrap: break-word; /* 긴 텍스트가 있으면 줄바꿈하도록 함 */
+		max-width: 100%; /* 너비를 부모에 맞추어 제한 */
 	}
 
 	.sidebar-header {
