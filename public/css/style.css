@@ -58,7 +58,7 @@
   --breakpoint-xl: 1200px;
   --font-family-sans-serif: "-apple-system", "Pretendard-Regular", "Noto Sans", "Noto Sans KR", "Roboto", "Nanum Gothic";
   --font-family-serif: "Nanum Myeongjo";
-  
+  -webkit-text-size-adjust: 100%;
 }
 
 @font-face {
@@ -78,7 +78,6 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 html {
 	height: 100%;
-	-webkit-text-size-adjust: 100%;
 }
 
 body {
