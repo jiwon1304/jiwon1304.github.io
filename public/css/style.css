@@ -110,7 +110,7 @@ pre {
 
 code {
 	font-family: "Noto Sans Mono", "Consolas", monospace;
-	font-size: 0.9em;
+	font-size: 0.9rem;
 	margin: 3px;
 	background-color: #f0f0f0;
 	border-radius: 3px;
@@ -394,6 +394,8 @@ footer {
 		line-height: 1.5;
 		width: calc(100dvw - 5%);
 	}
+
+	.code
 
 	.content {
 		padding: 0px;
