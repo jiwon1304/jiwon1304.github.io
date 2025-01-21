@@ -38,7 +38,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance,
 Windows 개발 환경에서 `LPSTR`은 Long Pointer String을 의미하며 `char*`와 동일하다. 도스나 터미널로 입력된 프로그램 인수이다. `argv`랑 같은 역할이다. 
 
 # `int nCmdShow`
-프로그램이 처음 실행될 때 윈도우가 어떤 크기로(최대화, 최소화, 보통) 켜지는지 알려준다. 다른 프로그램에 의해서 실행될 때에나 유용하다. 
+프로그램이 처음 실행될 때 윈도우가 어떤 크기로(최대화, 최소화, 보통) 켜지는지 알려준다. 다른 프로그램에 의해서 실행될 때에나 유용하다.
 
 이후 전달받은 `hInstance`를 통해서 윈도우를 생성하고, OS로부터의 메세지(마우스 움직임, 타이머 등등의 OS를 통해서 들어오는 모든 input)를 받는다. 다음은 [예시 코드](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp)이다. 프로그램이 실행된 직후 윈도우 클래스과 directx를 위한 device 초기화를 진행한다. `InitWindow`가 `wWinMain`에서 받은 파라미터를 그대로 이용하는 것을 볼 수 있다.
 
@@ -80,11 +80,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 ---
 출처:
-
 <https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp>
-
 <https://stackoverflow.com/questions/902967/what-is-a-windows-handle>
-
 <http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2>
-
 <https://chanos.tistory.com/entry/Windows-API-Win32-API의-기본구조-WinMain-2>
