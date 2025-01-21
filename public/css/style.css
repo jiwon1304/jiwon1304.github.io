@@ -110,7 +110,7 @@ pre {
 
 code {
 	font-family: "Noto Sans Mono", "Consolas", monospace;
-	font-size: 0.9rem;
+	font-size: 90%;
 	margin: 3px;
 	background-color: #f0f0f0;
 	border-radius: 3px;
@@ -400,9 +400,6 @@ footer {
 	header.post-header {
 		padding: 10px 5px 10px 5px;
 		margin-bottom: 10px;
-	}
-	code { 
-		font-size: 100%;
 	}
 
 	.post-list {
