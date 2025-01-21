@@ -80,7 +80,7 @@ typedef struct tagWNDCLASSEXW {
 `lpfnWndProc`, `hInstance`, `lpszClassName`이 있다.
 
 ## `lpfnWndProc`
-윈도우는 
+윈도우즈에서는 윈도우 클래스에 콜백 함수를 등록하여 마우스 움직임, 타이머 등의 액션을 해당 함수로 전달한다. 
 ---
 
 출처:
