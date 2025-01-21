@@ -80,7 +80,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 ---
 출처:
-<https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp>
-<https://stackoverflow.com/questions/902967/what-is-a-windows-handle>
-<http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2>
-<https://chanos.tistory.com/entry/Windows-API-Win32-API의-기본구조-WinMain-2>
+<https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp>  
+<https://stackoverflow.com/questions/902967/what-is-a-windows-handle>  
+<http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2>  
+<https://chanos.tistory.com/entry/Windows-API-Win32-API의-기본구조-WinMain-2>  

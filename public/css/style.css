@@ -362,7 +362,7 @@ header.home {
 	font-size:90%;
 	color: #888888;
 	padding-right: 0.5em;
-	/* text-transform: lowercase; */
+	text-transform: lowercase;
 }
 
 
@@ -398,9 +398,9 @@ footer {
 		word-wrap: break-word;
 	}
 
-	.highlight {
-		font-size : 0.9em;
-	}
+	/* .highlight {
+		font-size : 1.0em;
+	} */
 
 	header.post-header {
 		padding: 10px 5px 10px 5px;

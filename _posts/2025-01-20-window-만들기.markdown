@@ -86,7 +86,7 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 }
 ```
 `InitWindow`는 다음과 같은 순서대로 작동한다.
-1. `WNDCLASSEX`를 생성하고 커널에 등록(`RegisterClassEX`)한다.
+1. 윈도우 클래스(`WNDCLASSEX`)를 생성하고 커널에 등록(`RegisterClassEX`)한다.
 2. `CreateWindow`를 통해서 윈도우(창)을 만든다. 이때, 윈도우 클래스를 특정할 때 전에 등록한 `WNDCLASSEX`의 `lpszClassName`을 이용한다.
 3. 등록된 윈도우(창)을 `nCmdShow`에 따라서 출력한다.
 
@@ -113,7 +113,7 @@ typedef struct tagWNDCLASSEXW {
 `lpfnWndProc`, `hInstance`, `lpszClassName`이 있다.
 
 ## `lpfnWndProc`
-윈도우즈에서는 윈도우 클래스에 [윈도우(창) 프로시저](https://learn.microsoft.com/ko-kr/windows/win32/winmsg/window-procedures)라는 함수의 주소를 등록하여 윈도우 클래스에 전달되는 모든 "메세지"(마우스 움직임, 타이머 등)를 해당 함수로 전달한다. 해당 예시에서는 `WndProc` 함수를 이용한다.
+윈도우즈에서는 윈도우 클래스에 [윈도우(창) 프로시저](https://learn.microsoft.com/ko-kr/windows/win32/winmsg/window-procedures)라는 함수의 주소를 등록하여 윈도우 클래스에 전달되는 모든 "메세지"(마우스 움직임, 타이머 등)를 해당 함수로 전달한다. 해당 예시에서는 전역으로 선언된 `WndProc` 함수를 이용한다.
 
 ## `hInstance`
 윈도우 클래스를 생성한 프로그램 인스턴스를 등록한다. 프로그램이 종료되면 윈도우 클래스도 같이 사라진다.
@@ -122,6 +122,13 @@ typedef struct tagWNDCLASSEXW {
 윈도우 클래스의 이름을 지정한다. `lpsz`는 long, pointer, string, zero-terminated를 의미하고, [이름은 프로세스 내부에서만 중복되지 않으면 된다](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-window-classes#class-name). 왜 클래스에 문자열 이름을 부여하나 했는데, Windows API에서 윈도우 클래스를 이용할 때, 오브젝트가 아니라 문자열 형식으로 접근하는 것 같다. 아마 다른 프로그램과의 연동을 위해서인 것 같다. 이 문자열은 이후 윈도우 클래스가 `RegisterClassEx`를 통해 등록이 될 때, 프로세스의 [ATOM 테이블](https://learn.microsoft.com/ko-kr/windows/win32/dataxchg/about-atom-tables)내에서 16비트 정수값을 부여받는다.
 
 # `WndProc`
+```cpp
+WNDPROC Wndproc;
+
+LRESULT Wndproc( HWND unnamedParam1, UINT unnamedParam2, WPARAM unnamedParam3, LPARAM unnamedParam4 )
+{...}
+```
+
 ```cpp
 //--------------------------------------------------------------------------------------
 // Called every time the application receives a message
@@ -152,12 +159,48 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
     return 0;
 }
 ```
-윈도우 프로시저 `WndProc`은 콜백 함수로, 프로그램의 윈도우로 들어오는 모든 메세지에 대해서 이 함수가 호출된다. 윈도우의 핸들(`hWnd`)과 해당 메세지의 종류(`message`), 그리고 메세지의 정보(`wParam`, `lParam`)가 이 함수와 함께 들어온다. 보통 `switch`문을 써서 메세지를 처리하며, Alt+F4와 같은 기본적인 메세지는 `DefWindowProc`을 통해서 처리한다. 
+윈도우 프로시저 `WndProc`은 콜백 함수로, 프로그램의 윈도우로 들어오는 모든 메세지에 대해서 이 함수가 호출된다. 윈도우의 핸들(`hWnd`)과 해당 메세지의 종류(`message`), 그리고 메세지의 정보(`wParam`, `lParam`)가 이 함수와 함께 들어온다. 보통 `switch`문을 써서 메세지를 처리하며, 지정하지 않은 기본적인 메세지는 `DefWindowProc`을 통해서 기본 윈도우 프로시저를 호출해 처리한다. 
 
-그렇다면 `WndProc`은 실제로 
+그렇다면 `WndProc`은 실제로 메세지가 발생했을 때 호출될까? 아니다. 실제로는 발생하는 메세지는 [메세지 큐](https://learn.microsoft.com/ko-kr/windows/win32/winmsg/using-messages-and-message-queues)에 들어가서 FIFO 방식으로 나오게 된다. 터미널로만 사용자가 접근할 수 있는 콘솔 어플리케이션과 다르게 Win32 어플리케이션은 마우스와 키보드를 포함한 다양한 입력 방식(GUI)을 통해서 사용자가 접근할 수 있다. 그렇기 때문에 Win32 어플리케이션은 이벤트 기반(event-driven)이며 시스템은 어플리케이션에게 사용자의 입력을 메세지의 형태로 전달한다.  
+메세지는 시스템의 메세지 큐에 들어가고 어플리케이션은 이 큐에서 FIFO로 메세지를 받아서(`PeekMessage`) 처리한다(`DispatchMessage`).
+
+## `PeekMessage`
+```cpp
+BOOL PeekMessageA(
+  [out]          LPMSG lpMsg,
+  [in, optional] HWND  hWnd,
+  [in]           UINT  wMsgFilterMin,
+  [in]           UINT  wMsgFilterMax,
+  [in]           UINT  wRemoveMsg
+);
+```
+[`PeekMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)는 시스템의 메세지 큐에서 메세지를 가져와서 `lpMsg`에 저장한다. `LPMSG`는 [`MSG` 구조체](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)로의 포인터다. `wRemoveMsg`을 통해서 메세지를 가져왔을 때 메세지 큐에서 제거할지 말지를 정할 수 있다. 메세지가 없을 경우에는 `0`을 리턴한다.(non-blocking) 이를 통해서 사용자의 입력이 없을 경우에도, 즉 메세지 큐가 비어있을 때도 메세지 루프를 돌게 하여 계속하여 작업을 이어나갈 수 있다.  
+반대로 `GetMessage`는 메세지 큐가 비어있으면 새로운 메세지가 올 때까지 기다린다.(blocking) 따라서 게임과 같이 실시간으로 작동하는 프로그램은 `PeekMessage`가 필요하다.
+
+## `DispatchMessage`
+이후 [`DispatchMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessage)를 통해 윈도우 프로시저(`WndProc`)을 호출한다. 메세지에 윈도우의 핸들이 담겨있으므로, 이를 통해서 (윈도우 -> 윈도우 클래스 -> 윈도우 프로시저)를 찾아가 메세지와 함께 윈도우 프로시저를 호출한다. 이 과정이 길어지면 클릭을 해도(메세지 큐에 메세지가 쌓여도) 반응을 안하는(메세지가 dispatch되지 않는) 현상이 발생하는 것이다. 이것이 바로 프로그램의 `(응답 없음)`이다.
+```cpp
+// Main message loop
+MSG msg = {0};
+while( WM_QUIT != msg.message )
+{
+    if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
+    {
+        TranslateMessage( &msg );
+        DispatchMessage( &msg );
+    }
+    else
+    {
+        Render();
+    }
+}
+```
+예시 코드에서는 메세지가 있으면 메세지를 우선 처리하고, 이후 렌더를 한다. 사용자의 입력에 non-blocking 해야하므로 `PeekMessage`를 사용한 모습이다. 만약 `PeekMessage`를 통해서 프로그램 종료 메세지인 `WM_QUIT`을 받았다면, `DispatchMessage`는 이를 처리하지 않는다. 대신 `while`에서 걸려버리고 프로그램은 종료할 것이다. 
+
 ---
 
 출처:
-<http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2>
-<https://chanos.tistory.com/entry/Window-API-API-MFC란-윈도우-프로그래밍-동작-방식>
-<https://yoonghee.tistory.com/70>
+<http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2>  
+<https://chanos.tistory.com/entry/Window-API-API-MFC란-윈도우-프로그래밍-동작-방식>  
+<https://yoonghee.tistory.com/70>  
+<https://learn.microsoft.com/ko-kr/windows/win32/winmsg/using-messages-and-message-queues>  
