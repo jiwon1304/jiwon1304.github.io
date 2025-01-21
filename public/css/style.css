@@ -112,7 +112,7 @@ code {
 	font-family: "Noto Sans Mono", "Consolas", monospace;
 	/* font-size: 90%; */
 	/* font-size: 0.9em; */
-	font-size: 50%;
+	/* font-size: 50%; */
 	margin: 3px;
 	background-color: #f0f0f0;
 	border-radius: 3px;
@@ -397,6 +397,10 @@ footer {
 		line-height: 1.5;
 		width: calc(100dvw - 5%);
 		word-wrap: break-word;
+	}
+
+	code {
+		font-size: 10%;
 	}
 
 	header.post-header {
