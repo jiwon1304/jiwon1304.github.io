@@ -76,11 +76,11 @@ typedef struct tagWNDCLASSEXW {
 } WNDCLASSEXW, *PWNDCLASSEXW, *NPWNDCLASSEXW, *LPWNDCLASSEXW;
 ```
 
-참고로 구조체 이름의 접미사인 `W`와 `A`는 내부에서 문자열을 unicode(w) 방식으로 처리할 것인지, ascii(a) 방식으로 처리할 것인지의 차이이다. 현재는 `A`를 를 써도 `W`로 변환되어서 처리된다고 한다. 구조체를 구성하는 멤버들은 [이 문서](https://learn.microsoft.com/ko-kr/windows/win32/api/winuser/ns-winuser-wndclassexw)를 참고하자. 이 중 중요한것만 고르자면
+참고로 구조체 이름의 접미사인 `W`와 `A`는 내부에서 문자열을 유니코드(w) 방식으로 처리할 것인지, ANSI(a) 방식으로 처리할 것인지의 차이이다. 현재는 `A`를 를 써도 `W`로 변환되어서 처리된다고 한다. 구조체를 구성하는 멤버들은 [이 문서](https://learn.microsoft.com/ko-kr/windows/win32/api/winuser/ns-winuser-wndclassexw)를 참고하자. 이 중 중요한것만 고르자면
 `lpfnWndProc`, `hInstance`, `lpszClassName`이 있다.
 
 ## `lpfnWndProc`
-윈도우즈에서는 윈도우 클래스에 콜백 함수를 등록하여 윈도우 클래스에 전달되는 모든 "메세지"(마우스 움직임, 타이머 등)를 해당 함수로 전달한다. 
+윈도우즈에서는 윈도우 클래스에 [창 프로시제](https://learn.microsoft.com/ko-kr/windows/win32/winmsg/window-procedures)라는 콜백 함수를 등록하여 윈도우 클래스에 전달되는 모든 "메세지"(마우스 움직임, 타이머 등)를 해당 함수로 전달한다. 
 
 ## `hInstance`
 윈도우 클래스를 생성한 프로그램 인스턴스를 등록한다. 프로그램이 종료되면 윈도우 클래스도 같이 사라진다.
