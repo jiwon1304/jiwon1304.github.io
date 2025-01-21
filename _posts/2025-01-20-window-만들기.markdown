@@ -8,8 +8,6 @@ tags: [win32]
 
 프로그램이 실행되고 `wWinMain()`가 호출되면 가장 먼저 `InitWindow`를 통해서 [창 클래스(윈도우 클래스)](https://learn.microsoft.com/ko-kr/windows/win32/learnwin32/creating-a-window)를 등록한다. 윈도우 클래스는 만들고자 하는 윈도우(창)의 속성을 저장하고 있는 데이터 구조로, 운영 체제에서 관리된다.
 
-ㅇㄹㄹㅇ
-
 ```cpp
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
 {
