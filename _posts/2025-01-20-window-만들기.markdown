@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "window 만들기"
+title:  "윈도우(창) 만들기"
 categories: win32
 tags: [win32]
 ---
@@ -18,7 +18,9 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
         return 0;
     ...
 }
+
 ...
+
 HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 {
     // Register class
@@ -54,13 +56,14 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
     return S_OK;
 }
 ```
+
+# `WNDCLASSEX`
+윈도우 클래스는 [`WNDCLASS`](https://learn.microsoft.com/ko-kr/windows/win32/api/winuser/ns-winuser-wndclassexw)라는 구조체에 속성을 담아서 등록할 수 있다.
+
+
 ---
 출처:
-
 <https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp>
-
 <https://stackoverflow.com/questions/902967/what-is-a-windows-handle>
-
 <http://www.directxtutorial.com/Lesson.aspx?lessonid=11-1-2>
-
 <https://chanos.tistory.com/entry/Windows-API-Win32-API의-기본구조-WinMain-2>
