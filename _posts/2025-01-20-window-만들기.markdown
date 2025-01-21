@@ -80,7 +80,13 @@ typedef struct tagWNDCLASSEXW {
 `lpfnWndProc`, `hInstance`, `lpszClassName`이 있다.
 
 ## `lpfnWndProc`
-윈도우즈에서는 윈도우 클래스에 콜백 함수를 등록하여 마우스 움직임, 타이머 등의 액션을 해당 함수로 전달한다. 
+윈도우즈에서는 윈도우 클래스에 콜백 함수를 등록하여 윈도우 클래스에 전달되는 모든 "메세지"(마우스 움직임, 타이머 등)를 해당 함수로 전달한다. 
+
+## `hInstance`
+윈도우 클래스를 생성한 프로그램 인스턴스를 등록한다. 프로그램이 종료되면 윈도우 클래스도 같이 사라진다.
+
+## `lpszClassName`
+윈도우 클래스의 이름을 지정한다. `lpsz`는 long, pointer, string, zero-terminated를 의미하고, 
 ---
 
 출처:
