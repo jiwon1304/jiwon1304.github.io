@@ -100,7 +100,7 @@ a:hover {
 }
 
 pre {
-	display:w block;
+	display: block;
 	overflow: auto;
 	margin-bottom: 15px;
 	padding-bottom: 10px;
@@ -111,8 +111,7 @@ pre {
 code {
 	font-family: "Noto Sans Mono", "Consolas", monospace;
 	/* font-size: 90%; */
-	font-size: 0.9em;
-	/* font-size: 50%; */
+	/* font-size: 0.9em; */
 	margin: 3px;
 	background-color: #f0f0f0;
 	border-radius: 3px;
@@ -394,18 +393,13 @@ footer {
 /* @media { */
 	article {
 		/* font-size: 0.9em; */
-		line-height: 1.5;
+		line-height: 1.9;
 		width: calc(100dvw - 5%);
 		word-wrap: break-word;
 	}
 
-	code {
-		/* font-size: 90%; */
-		/* font-size: 12px; */
-	}
-
 	.highlight {
-		/* font-size : 16px; */
+		font-size : 0.9em;
 	}
 
 	header.post-header {
