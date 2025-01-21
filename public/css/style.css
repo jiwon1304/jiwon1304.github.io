@@ -111,7 +111,7 @@ pre {
 code {
 	font-family: "Noto Sans Mono", "Consolas", monospace;
 	/* font-size: 90%; */
-	/* font-size: 0.9em; */
+	font-size: 0.8em;
 	margin: 3px;
 	background-color: #f0f0f0;
 	border-radius: 3px;
@@ -277,8 +277,8 @@ blockquote {
 }
 
 p {
-  margin-top: 0;
-  margin-bottom: 1em;
+  margin-top: 0.5em;
+  margin-bottom: 1.0em;
 }
 
 article h1,
@@ -327,7 +327,7 @@ header.home {
 .post-title {
 	font-size: 2em;
 	color: #111;
-	/* font-weight: bold; */
+	font-weight: bold;
 }
 
 .cv-title {
