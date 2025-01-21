@@ -78,6 +78,7 @@ article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
 
 html {
 	height: 100%;
+	-webkit-text-size-adjust: 100%;
 }
 
 body {
