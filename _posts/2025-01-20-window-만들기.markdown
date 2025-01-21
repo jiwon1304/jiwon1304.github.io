@@ -59,6 +59,23 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 
 # `WNDCLASSEX`
 윈도우 클래스는 [`WNDCLASS`](https://learn.microsoft.com/ko-kr/windows/win32/api/winuser/ns-winuser-wndclassexw)라는 구조체에 속성을 담아서 등록할 수 있다.
+```cpp
+typedef struct tagWNDCLASSEXW {
+  UINT      cbSize;
+  UINT      style;
+  WNDPROC   lpfnWndProc;
+  int       cbClsExtra;
+  int       cbWndExtra;
+  HINSTANCE hInstance;
+  HICON     hIcon;
+  HCURSOR   hCursor;
+  HBRUSH    hbrBackground;
+  LPCWSTR   lpszMenuName;
+  LPCWSTR   lpszClassName;
+  HICON     hIconSm;
+} WNDCLASSEXW, *PWNDCLASSEXW, *NPWNDCLASSEXW, *LPWNDCLASSEXW;
+```
+참고로 구조체 이름의 접미사인 `W`와 `A`는 내부에서 문자열을 unicode(w) 방식으로 처리할 것인지, ascii(a) 방식으로 처리할 것인지의 차이이다. 
 
 
 ---
