@@ -415,7 +415,7 @@ footer {
 
 	.sidebar-item {
 		flex: 1 1 auto;
-		min-width: 15vw;
+		min-width: 20vw;
 	}
 
 	.sidebar-header {
