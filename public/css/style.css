@@ -144,7 +144,7 @@ code {
 	/*position: fixed;*/
 	display: flex;
 	flex-flow: column nowrap;
-	flex: 0 0 220px;
+	flex: 0 0 180px;
 	padding: 15px;
 	z-index: 1;
 	background-color: #222;
@@ -359,9 +359,9 @@ header.home {
 }
 
 .tags{
-	font-size:90%;
+	font-size:80%;
 	color: #888888;
-	padding-right: 0.5em;
+	padding-right: 0.2em;
 	text-transform: lowercase;
 }
 
@@ -389,7 +389,8 @@ footer {
 }
 
 /* 모바일 */
-@media (max-width: 576px) {
+/* @media (max-width: 576px) { */
+@media (max-width: 768px) {
 /* @media { */
 	article {
 		/* font-size: 0.9em; */
@@ -411,9 +412,9 @@ footer {
 		padding-left: 2rem;
 		padding-right: 2rem;
 	}
-	.post-list-item {
+	/* .post-list-item {
 		padding: 0.2em;
-	}
+	} */
 
 	.content {
 		padding: 0px;
@@ -447,6 +448,7 @@ footer {
 		white-space: nowrap;
 		display: inline-block;
 		width: auto;
+		/* margin: 0.3em; */
 	}
 
 	/* nav는 세로로 배치되고, flexbox를 사용하여 자식 요소들이 세로로 정렬되도록 함 */
@@ -478,6 +480,10 @@ footer {
 		margin-right: 10px; 간격 추가 */
 		word-wrap: break-word; /* 긴 텍스트가 있으면 줄바꿈하도록 함 */
 		max-width: 100%; /* 너비를 부모에 맞추어 제한 */
+	}
+
+	.tags{
+		margin: 0.1em;
 	}
 
 	.sidebar-header {

@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "윈도우 생성하기"
-categories: win32
+categories: DirectX
 tags: [win32]
 ---
 > 이 글은 [directx11 튜토리얼 코드](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp)를 기준으로 합니다.
@@ -175,10 +175,12 @@ BOOL PeekMessageA(
 );
 ```
 [`PeekMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-peekmessagew)는 시스템의 메세지 큐에서 메세지를 가져와서 `lpMsg`에 저장한다. `LPMSG`는 [`MSG` 구조체](https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-msg)로의 포인터다. `wRemoveMsg`을 통해서 메세지를 가져왔을 때 메세지 큐에서 제거할지 말지를 정할 수 있다. 메세지가 없을 경우에는 `0`을 리턴한다.(non-blocking) 이를 통해서 사용자의 입력이 없을 경우에도, 즉 메세지 큐가 비어있을 때도 메세지 루프를 돌게 하여 계속하여 작업을 이어나갈 수 있다.  
-반대로 `GetMessage`는 메세지 큐가 비어있으면 새로운 메세지가 올 때까지 기다린다.(blocking) 따라서 게임과 같이 실시간으로 작동하는 프로그램은 `PeekMessage`가 필요하다.
+반대로 `GetMessage`는 메세지 큐가 비어있으면 새로운 메세지가 올 때까지 기다린다.(blocking) 따라서 게임과 같이 실시간으로 작동하는 프로그램은 `PeekMessage`가 필요하다.  
+메세지는 시스템에서 [기본적으로 제공](https://learn.microsoft.com/en-us/windows/win32/winmsg/about-messages-and-message-queues#system-defined-messages)하지만, 직접 추가할 수도 있다.
 
 ## `DispatchMessage`
 이후 [`DispatchMessage`](https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-dispatchmessage)를 통해 윈도우 프로시저(`WndProc`)을 호출한다. 메세지에 윈도우의 핸들이 담겨있으므로, 이를 통해서 (윈도우 -> 윈도우 클래스 -> 윈도우 프로시저)를 찾아가 메세지와 함께 윈도우 프로시저를 호출한다. 이 과정이 길어지면 클릭을 해도(메세지 큐에 메세지가 쌓여도) 반응을 안하는(메세지가 dispatch되지 않는) 현상이 발생하는 것이다. 이것이 바로 프로그램의 `(응답 없음)`이다.
+`TranslateMessage`는 키보드 입력을 문자열로 바꾸는데 이용하는 함수이다.
 ```cpp
 // Main message loop
 MSG msg = {0};
@@ -204,3 +206,5 @@ while( WM_QUIT != msg.message )
 <https://chanos.tistory.com/entry/Window-API-API-MFC란-윈도우-프로그래밍-동작-방식>  
 <https://yoonghee.tistory.com/70>  
 <https://learn.microsoft.com/ko-kr/windows/win32/winmsg/using-messages-and-message-queues>  
+<https://woo-dev.tistory.com/155>  
+<https://rhksgml78.tistory.com/110>  

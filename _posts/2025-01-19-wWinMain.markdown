@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "wWinMain() 함수"
-categories: win32
+categories: DirectX
 tags: [win32]
 ---
 console에서 작동하는 binary code는 `main`함수로부터 시작된다. 반면 Win32 어플리케이션에서는 `wWinMain`이라는 함수로부터 어플리케이션이 시작된다.
