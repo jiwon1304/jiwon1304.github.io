@@ -216,3 +216,90 @@ ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
 전역 변수을 확인해보면 디바이스, 디바이스 컨텍스트, 스왑 체인의 포인터가 선언되어있다. [스왑 체인](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiswapchain)은 버퍼링을 위한 버퍼 집합이다. DirectX에서는 2D 이미지를 [표면(surface)](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgisurface)이라고 하고, 스왑 체인은 여러개의 surface로 이루어져 있다.
 
 이번엔 클래스 이름을 살펴보자. 클래스는 `I`로 시작하는데, 이는 [COM 오브젝트](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=ymy203&logNo=70104910502)라는 것으로, 각각의 오브젝트를 연결하여 사용할 수 있도록 모듈화한 오브젝트이다. 이후 `D3D11`과 `DXGI`로 이어지는데, 여기서 [DXGI](https://learn.microsoft.com/ko-kr/windows/win32/direct3ddxgi/dx-graphics-dxgi)는 DirectX의 로우 레벨 작업을 관리하는 API로, Direct3D와는 구분된다. Direct3D를 통해서 렌더링이 이루어지지만, 이를 디스플레이에 표시하는 스왑 체인은 DXGI의 구성 요소이다. 
+
+이제 `InitDevice`를 확인해보자.
+# 뷰포트 구하기
+```cpp
+HRESULT InitDevice()
+{
+    HRESULT hr = S_OK;
+
+    RECT rc;
+    GetClientRect( g_hWnd, &rc );
+    UINT width = rc.right - rc.left;
+    UINT height = rc.bottom - rc.top;
+```
+맨 처음에는 viewport의 크기를 구하기 위해서 윈도우의 클라이언트 화면의 크기를 구한다. [`GetClientRect`](https://stackoverflow.com/questions/7561049/what-is-the-difference-between-getclientrect-and-getwindowrect-in-winapi)는 창의 메뉴, 최상단의 표시줄 등과같이 기본 요소를 뺀 실제 어플리케이션의 화면이 있는 영역의 좌표를 반환한다.  
+
+# 디바이스 생성하기
+```cpp
+    UINT createDeviceFlags = 0;
+#ifdef _DEBUG
+    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
+    D3D_DRIVER_TYPE driverTypes[] =
+    {
+        D3D_DRIVER_TYPE_HARDWARE,
+        D3D_DRIVER_TYPE_WARP,
+        D3D_DRIVER_TYPE_REFERENCE,
+    };
+    UINT numDriverTypes = ARRAYSIZE( driverTypes );
+
+    D3D_FEATURE_LEVEL featureLevels[] =
+    {
+        D3D_FEATURE_LEVEL_11_1,
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+    };
+	UINT numFeatureLevels = ARRAYSIZE( featureLevels );
+
+    for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
+    {
+        g_driverType = driverTypes[driverTypeIndex];
+        hr = D3D11CreateDevice( nullptr, g_driverType, nullptr, createDeviceFlags, featureLevels, numFeatureLevels,
+                                D3D11_SDK_VERSION, &g_pd3dDevice, &g_featureLevel, &g_pImmediateContext );
+
+        if ( hr == E_INVALIDARG )
+        {
+            // DirectX 11.0 platforms will not recognize D3D_FEATURE_LEVEL_11_1 so we need to retry without it
+            hr = D3D11CreateDevice( nullptr, g_driverType, nullptr, createDeviceFlags, &featureLevels[1], numFeatureLevels - 1,
+                                    D3D11_SDK_VERSION, &g_pd3dDevice, &g_featureLevel, &g_pImmediateContext );
+        }
+
+        if( SUCCEEDED( hr ) )
+            break;
+    }
+    if( FAILED( hr ) )
+        return hr;
+```
+`driverTypes[]`와 `featureLevels[]`를 통해서 `for`문으로 가장 적합한 디바이스를 생성한다. `D3D_DRIVER_TYPE`은 디바이스가 이용할 드라이버이고 종류는 [여러개](https://learn.microsoft.com/ko-kr/windows/win32/api/d3dcommon/ne-d3dcommon-d3d_driver_type)가 있다. Direct3D를 직접 지원하는 하드웨어를 쓸지, 지원하지 않지만 간접적으로 쓸지, 소프트웨어를 이용할지를 선택할 수 있다. 물론 `D3D_DRIVER_TYPE_HARDWARE`를 써야지 정상적인 성능을 얻을 수 있다. 또한 `D3D_FEATURE_LEVEL`를 통해서 하드웨어가 어느 버전의 Direct3D를 지원하는지 찾는다.  
+
+디바이스 생성은 [`D3D11CreateDevice`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/nf-d3d11-d3d11createdevice)를 통해서 이루어진다. 
+```cpp
+HRESULT D3D11CreateDevice(
+  [in, optional]  IDXGIAdapter            *pAdapter,
+                  D3D_DRIVER_TYPE         DriverType,
+                  HMODULE                 Software,
+                  UINT                    Flags,
+  [in, optional]  const D3D_FEATURE_LEVEL *pFeatureLevels,
+                  UINT                    FeatureLevels,
+                  UINT                    SDKVersion,
+  [out, optional] ID3D11Device            **ppDevice,
+  [out, optional] D3D_FEATURE_LEVEL       *pFeatureLevel,
+  [out, optional] ID3D11DeviceContext     **ppImmediateContext
+);
+```
+`pAdapter`는 그래픽스 어댑터를 의미한다. 스왑 체인과 동일하게 DXGI에서 관리하고 있는 것을 확인할 수 있다. `NULL`을 넘겨주면 자동으로 DXGI가 관리해준다. `Software`는 소프트웨어 래스터라이저인데, 특별히 쓰는 것이 아니니 마찬가지로 `NULL`를 넘겨준다. `SDKVersion`은 `D3D11_SDK_VERSION`을 이용한다. 하드웨어에게 해당 디바이스가 어떤 SDK 버전을 쓰는지 알려주는 용도인데, MS 문서에서는 그냥 `D3D11_SDK_VERSION`을 쓰라고 적혀있다. 
+
+`**ppDevice`, `*pFeatureLevel`, `**ppImmediateContext`은 디바이스 생성이 성공하면 사용되는 디바이스, 피쳐 레벨, 디바이스 컨텍스트를 알려준다. 
+
+# DXGI 오브젝트 생성
+스왑 체인을 포함한 DXGI 오브젝트는 `IDXGIFactory`로부터 만들 수 있다. `QueryInterface`를 통해서 direct3D 디바이스로부터 DXGI 디바이스를 얻고, 다시 `GetAdapter`를 통해 디스플레이 어댑터를 얻는다. 이 어댑터를 통해 최종적으로 DXGI 팩토리를 얻는다. 끝나면 자원을 release한다.
+`IDXGIFactory` 클래스는 `IDXGIFactory1`과 `IDXGIFactory2`, ...가 있다. 각각 DXGI 1.1, 1.2, ...를 지원한다. 상위
+
+---
+출처:
+<https://wergia.tistory.com/3>  
+<>
