@@ -202,4 +202,17 @@ HRESULT InitDevice()
 
 그 전에 [디바이스(device)와 디바이스 컨텍스트(device context)](https://learn.microsoft.com/en-us/windows/win32/direct3d11/overviews-direct3d-11-devices)에 대해서 알아보자. 디바이스는 그래픽 드라이버/하드웨어와 통신하는 인터페이스 오브젝트이다. 리소스의 할당, 제거 등을 할 수 있다. 디바이스 컨텍스트는 환경과 설정을 하고 디바이스 오브젝트를 통해 렌더링을 할 수 있는 오브젝트이다.
 
+```cpp
+D3D_DRIVER_TYPE         g_driverType = D3D_DRIVER_TYPE_NULL;
+D3D_FEATURE_LEVEL       g_featureLevel = D3D_FEATURE_LEVEL_11_0;
+ID3D11Device*           g_pd3dDevice = nullptr;
+ID3D11Device1*          g_pd3dDevice1 = nullptr;
+ID3D11DeviceContext*    g_pImmediateContext = nullptr;
+ID3D11DeviceContext1*   g_pImmediateContext1 = nullptr;
+IDXGISwapChain*         g_pSwapChain = nullptr;
+IDXGISwapChain1*        g_pSwapChain1 = nullptr;
+ID3D11RenderTargetView* g_pRenderTargetView = nullptr;
+```
+전역 변수을 확인해보면 디바이스, 디바이스 컨텍스트, 스왑 체인의 포인터가 선언되어있다. [스왑 체인](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgiswapchain)은 버퍼링을 위한 버퍼 집합이다. DirectX에서는 2D 이미지를 [표면(surface)](https://learn.microsoft.com/en-us/windows/win32/api/dxgi/nn-dxgi-idxgisurface)이라고 하고, 스왑 체인은 여러개의 surface로 이루어져 있다.
 
+이번엔 클래스 이름을 살펴보자. 클래스는 `I`로 시작하는데, 이는 [COM 오브젝트](https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=ymy203&logNo=70104910502)라는 것으로, 각각의 오브젝트를 연결하여 사용할 수 있도록 모듈화한 오브젝트이다. 이후 `D3D11`과 `DXGI`로 이어지는데, 여기서 [DXGI](https://learn.microsoft.com/ko-kr/windows/win32/direct3ddxgi/dx-graphics-dxgi)는 DirectX의 로우 레벨 작업을 관리하는 API로, Direct3D와는 구분된다. Direct3D를 통해서 렌더링이 이루어지지만, 이를 디스플레이에 표시하는 스왑 체인은 DXGI의 구성 요소이다. 
