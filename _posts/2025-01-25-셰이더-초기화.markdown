@@ -2,7 +2,7 @@
 layout: post
 title:  "셰이더 초기화"
 categories: DirectX
-tags: [win32, directx]
+tags: [directx]
 ---
 > 이 글은 [directx11 튜토리얼 코드](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial02/Tutorial02.cpp)를 기준으로 합니다.
 
