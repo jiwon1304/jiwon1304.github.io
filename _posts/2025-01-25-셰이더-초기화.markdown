@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Direct3D 초기화"
+title:  "셰이더 초기화"
 categories: DirectX
 tags: [win32, directx]
 ---
@@ -187,14 +187,14 @@ if( FAILED( hr ) )
 ```
 
 # input layout 정의
-꼭짓점(vertex) 셰이더 파일은 이렇게 생겼다.
+이번 예제의 꼭짓점(vertex) 셰이더 파일은 이렇게 생겼다.
 ```hlsl
 float4 VS( float4 Pos : POSITION ) : SV_POSITION
 {
     return Pos;
 }
 ```
-`D3DCompileFromFile`을 통해서 진입점(`pEntrypoint`)을 `VS`로 잡았기에, 우리는 컴파일된 셰이더 코드에서 `VS`를 진입점으로 잡는다. 진입점이 `VS`이기 때문에 `float4`를 입력으로 받아야하는 것도 알지만, 우리는 `float4`가 어떻게 구성되어 있는지 input layout을 정의해줘야 한다. 
+`D3DCompileFromFile`을 통해서 진입점(`pEntrypoint`)을 `VS`로 잡았기에, GPU는 컴파일된 셰이더 코드에서 `VS`를 진입점으로 잡는다. 진입점이 `VS`이기 때문에 GPU는 `float4`를 입력으로 받아야하는 것도 알지만, 우리는 `float4`가 어떻게 구성되어 있는지 알려줘야 하고, 이를 input layout이라고 한다. 
 ```cpp
 // Define the input layout
 D3D11_INPUT_ELEMENT_DESC layout[] =
@@ -202,18 +202,9 @@ D3D11_INPUT_ELEMENT_DESC layout[] =
     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 };
 UINT numElements = ARRAYSIZE( layout );
-
-// Create the input layout
-hr = g_pd3dDevice->CreateInputLayout( layout, numElements, pVSBlob->GetBufferPointer(),
-                                        pVSBlob->GetBufferSize(), &g_pVertexLayout );
-pVSBlob->Release();
-if( FAILED( hr ) )
-    return hr;
-
-// Set the input layout
-g_pImmediateContext->IASetInputLayout( g_pVertexLayout );
 ```
-layout은 [D3D11_INPUT_ELEMENT_DESC](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc)라는 구조체를 통해서 정의할 수 있다. 
+
+layout은 맨 처음 [D3D11_INPUT_ELEMENT_DESC](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc)라는 구조체에 넣는다.
 ```cpp
 typedef struct D3D11_INPUT_ELEMENT_DESC {
   LPCSTR                     SemanticName;
@@ -224,4 +215,35 @@ typedef struct D3D11_INPUT_ELEMENT_DESC {
   D3D11_INPUT_CLASSIFICATION InputSlotClass;
   UINT                       InstanceDataStepRate;
 } D3D11_INPUT_ELEMENT_DESC;
+```
+이 구조체를 이전에 컴파일한 버텍스 셰이더에서 사용할 수 있도록 `CreateInputLayout` 함수를 통해 Direct3D 인터페이스인 `ID3D11InputLayout`로 변경한다. 그리고 최종적으로 디바이스 컨텍스트에서 사용할 수 있게 등록(`IASetInputLayout`)한다. OpenGL의 `glVertexAttribPointer`의 비슷한 과정이다.
+```cpp
+// Create the input layout
+hr = g_pd3dDevice->CreateInputLayout( layout, numElements, pVSBlob->GetBufferPointer(),
+                                        pVSBlob->GetBufferSize(), &g_pVertexLayout );
+pVSBlob->Release();
+if( FAILED( hr ) )
+    return hr;
+
+// Set the input layout
+g_pImmediateContext->IASetInputLayout( g_pVertexLayout );
+```
+
+픽셀 셰이더도 input layout의 정의가 빠진 채로 동일한 과정으로 진행된다. 직전 단계(버텍스 셰이더)의 output이 곧 픽셀 셰이더의 input이기 때문이다.
+```cpp
+// Compile the pixel shader
+ID3DBlob* pPSBlob = nullptr;
+hr = CompileShaderFromFile( L"Tutorial02.fxh", "PS", "ps_4_0", &pPSBlob );
+if( FAILED( hr ) )
+{
+MessageBox( nullptr,
+            L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK );
+return hr;
+}
+
+// Create the pixel shader
+hr = g_pd3dDevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &g_pPixelShader );
+pPSBlob->Release();
+if( FAILED( hr ) )
+return hr;
 ```
