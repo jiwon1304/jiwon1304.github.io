@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "버텍스 버퍼"
+title:  "버텍스 버퍼 등록"
 categories: DirectX
 tags: [directx]
 ---
@@ -38,7 +38,7 @@ g_pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELI
 return S_OK;
 ```
 # 버퍼 생성
-버퍼는 `CreateBuffer`를 통해서 만들 수 있다. 이 때 버퍼를 설명해주는 [`D3D11_BUFFER_DESC`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_buffer_desc) `*pDesc`과, 실제 버텍스 데이터인 [`D3D11_SUBRESOURCE_DATA`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_subresource_data) `*pInitialData`가 필요하다. 
+버퍼는 `CreateBuffer`를 통해서 만들 수 있다. 이 때 버퍼를 설명해주는 [`D3D11_BUFFER_DESC`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_buffer_desc) `*pDesc`과, 실제 버텍스 데이터인 [`D3D11_SUBRESOURCE_DATA`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_subresource_data) `*pInitialData`가 필요하다. `CreateBuffer`에서는 버퍼 내부의 버텍스와 그 데이터가 어떤 구조로 되어 있는지 기술하지는 않는다.
 ```cpp
 HRESULT CreateBuffer(
   [in]            const D3D11_BUFFER_DESC      *pDesc,
@@ -75,7 +75,9 @@ void IASetVertexBuffers(
   [in, optional] const UINT   *pOffsets
 );
 ```
-Input Assembler 단계의 함수인만큼, `IA`의 접두사를 가진다. 입력 슬롯의 번호 개수, stride, offset를 정의할 수 있고, `ppVertexBuffers`를 통해서 실제 버퍼 오브젝트를 넣는다. 
+Input Assembler 단계의 함수인만큼, `IA`의 접두사를 가진다. 입력 슬롯의 번호와 개수는 이전에 디바이스 컨텍스트 등록한 input layout에 따라간다. 또한 stride, offset를 정의할 수 있고 `ppVertexBuffers`를 통해서 실제 버퍼 오브젝트를 넣는다. 
+
 ---
 출처 :
 <https://blog.naver.com/sorkelf/40162437338>
+<https://velog.io/@billionaire/입력-조립기1-정점과-입력-배치input-layout>

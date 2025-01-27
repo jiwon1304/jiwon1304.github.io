@@ -61,34 +61,6 @@ hr = g_pd3dDevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetB
 pPSBlob->Release();
 if( FAILED( hr ) )
     return hr;
-
-// Create vertex buffer
-SimpleVertex vertices[] =
-{
-    XMFLOAT3( 0.0f, 0.5f, 0.5f ),
-    XMFLOAT3( 0.5f, -0.5f, 0.5f ),
-    XMFLOAT3( -0.5f, -0.5f, 0.5f ),
-};
-D3D11_BUFFER_DESC bd = {};
-bd.Usage = D3D11_USAGE_DEFAULT;
-bd.ByteWidth = sizeof( SimpleVertex ) * 3;
-bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-bd.CPUAccessFlags = 0;
-
-D3D11_SUBRESOURCE_DATA InitData = {};
-InitData.pSysMem = vertices;
-hr = g_pd3dDevice->CreateBuffer( &bd, &InitData, &g_pVertexBuffer );
-if( FAILED( hr ) )
-    return hr;
-
-// Set vertex buffer
-UINT stride = sizeof( SimpleVertex );
-UINT offset = 0;
-g_pImmediateContext->IASetVertexBuffers( 0, 1, &g_pVertexBuffer, &stride, &offset );
-
-// Set primitive topology
-g_pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
 ```
 </div>
 </details>
@@ -204,7 +176,7 @@ D3D11_INPUT_ELEMENT_DESC layout[] =
 UINT numElements = ARRAYSIZE( layout );
 ```
 
-layout은 맨 처음 [D3D11_INPUT_ELEMENT_DESC](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc)라는 구조체에 넣는다.
+layout은 먼저 [D3D11_INPUT_ELEMENT_DESC](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc)라는 구조체에 넣는다. 각 [의미 체계](https://learn.microsoft.com/ko-kr/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)마다 하나씩 정의한다. 
 ```cpp
 typedef struct D3D11_INPUT_ELEMENT_DESC {
   LPCSTR                     SemanticName;
@@ -216,6 +188,9 @@ typedef struct D3D11_INPUT_ELEMENT_DESC {
   UINT                       InstanceDataStepRate;
 } D3D11_INPUT_ELEMENT_DESC;
 ```
+여기서 `SemanticName`은 position, texCoord, ... 등과 같은 의미 체계로, 셰이더 파일의 입력과 일치해야 한다. `SemanticIndex`은 중복되는 의미 체계를 사용할 때 이용한다. 예를 들어, `{ "Position", 2, ...}`은 셰이더의 input의 `POSITION2` semantic에 연결된다. `InputSlot`은 어느 슬롯에서 해당 데이터가 들어오는지 정의한다. 슬롯은 `IASetVertexBuffers`에서 버퍼를 등록할 때 정의된다. 
+
+
 이 구조체를 이전에 컴파일한 버텍스 셰이더에서 사용할 수 있도록 `CreateInputLayout` 함수를 통해 Direct3D 인터페이스인 `ID3D11InputLayout`로 변경한다. 그리고 최종적으로 디바이스 컨텍스트에서 사용할 수 있게 등록(`IASetInputLayout`)한다. OpenGL의 `glVertexAttribPointer`의 비슷한 과정이다.
 ```cpp
 // Create the input layout
