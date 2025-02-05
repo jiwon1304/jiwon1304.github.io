@@ -120,6 +120,10 @@ code {
 	padding-bottom: 0.1em;
 }
 
+.post {
+	margin-bottom: 10vw;
+}
+
 .highlight{
 	display: flex;
 	margin: 0.1em;
@@ -277,8 +281,8 @@ blockquote {
 }
 
 p {
-  margin-top: 0.5em;
-  margin-bottom: 1.0em;
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
 }
 
 article h1,

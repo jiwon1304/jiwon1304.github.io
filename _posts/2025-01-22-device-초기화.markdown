@@ -2,7 +2,7 @@
 layout: post
 title:  "DirectX device 초기화"
 categories: DirectX
-tags: [win32, directx]
+tags: [directx]
 ---
 > 이 글은 [directx11 튜토리얼 코드](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial01/Tutorial01.cpp)를 기준으로 합니다.
 
@@ -375,7 +375,7 @@ hr = g_pSwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), reinterpret_cast<v
 ```cpp
 hr = g_pd3dDevice->CreateRenderTargetView( pBackBuffer, nullptr, &g_pRenderTargetView );
 ```  
-texture2D같은 객체들은 바로 접근이 가능한 것이 아니라 view 객체를 거쳐서 접근할 수 있다, `CreateRenderTargetView`는 `pBackBuffer`에 접근할때 필요한 view 객체인 `g_pRenderTargetView`을 생성한다. 객체를 생성하므로 디바이스를 통해서 생성한다.
+texture2D같은 객체들은 바로 접근이 가능한 것이 아니라 [view 객체](https://velog.io/@rehpe/Direct-2D-06.-Render-Target-View-Depth-Stencil-View-ViewPort-설정-스마트-포인터)를 거쳐서 접근할 수 있다, `CreateRenderTargetView`는 `pBackBuffer`에 접근할때 필요한 view 객체인 `g_pRenderTargetView`을 생성한다. 객체를 생성하므로 디바이스를 통해서 생성한다.
 
 ## `OMSetRenderTargets`
 ```cpp

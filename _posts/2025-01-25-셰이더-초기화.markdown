@@ -1,13 +1,13 @@
 ---
 layout: post
-title:  "DirectX device �ʱ�ȭ"
+title:  "셰이더 초기화"
 categories: DirectX
-tags: [win32, directx]
+tags: [directx]
 ---
-> �� ���� [directx11 Ʃ�丮�� �ڵ�](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial02/Tutorial02.cpp)�� �������� �մϴ�.
+> 이 글은 [directx11 튜토리얼 코드](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial02/Tutorial02.cpp)를 기준으로 합니다.
 
 <details>
-<summary> ���̴� �ʱ�ȭ �ڵ� ����/��ġ�� </summary>
+<summary> 셰이더 초기화 코드 접기/펼치기 </summary>
 
 <div markdown="1">
 ```cpp
@@ -61,40 +61,12 @@ hr = g_pd3dDevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetB
 pPSBlob->Release();
 if( FAILED( hr ) )
     return hr;
-
-// Create vertex buffer
-SimpleVertex vertices[] =
-{
-    XMFLOAT3( 0.0f, 0.5f, 0.5f ),
-    XMFLOAT3( 0.5f, -0.5f, 0.5f ),
-    XMFLOAT3( -0.5f, -0.5f, 0.5f ),
-};
-D3D11_BUFFER_DESC bd = {};
-bd.Usage = D3D11_USAGE_DEFAULT;
-bd.ByteWidth = sizeof( SimpleVertex ) * 3;
-bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-bd.CPUAccessFlags = 0;
-
-D3D11_SUBRESOURCE_DATA InitData = {};
-InitData.pSysMem = vertices;
-hr = g_pd3dDevice->CreateBuffer( &bd, &InitData, &g_pVertexBuffer );
-if( FAILED( hr ) )
-    return hr;
-
-// Set vertex buffer
-UINT stride = sizeof( SimpleVertex );
-UINT offset = 0;
-g_pImmediateContext->IASetVertexBuffers( 0, 1, &g_pVertexBuffer, &stride, &offset );
-
-// Set primitive topology
-g_pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-
 ```
 </div>
 </details>
 
-�������� ����� `CompileShaderFromFile ` �Լ��� ������ ����. 
-
+# 셰이더 컴파일
+예제에서 선언된 `CompileShaderFromFile` 함수는 다음과 같이 `D3DCompileFromFile`의 핸들러로 이용된다.
 ```cpp
 //--------------------------------------------------------------------------------------
 // Helper for compiling shaders with D3DCompile
@@ -135,7 +107,7 @@ HRESULT CompileShaderFromFile( const WCHAR* szFileName, LPCSTR szEntryPoint, LPC
 }
 ```
 
-`d3dcompiler.h`�� ���ǵǾ� �ִ� ������ �Լ��� ������ ���� ����Ǿ��ִ�.
+`d3dcompiler.h`에 정의되어 있는 [D3DCompileFromFile](https://learn.microsoft.com/ko-kr/windows/win32/api/d3dcompiler/nf-d3dcompiler-d3dcompilefromfile)은 다음과 같이 선언되어있다.
 ```cpp
 HRESULT D3DCompileFromFile(
   [in]            LPCWSTR                pFileName,
@@ -149,13 +121,104 @@ HRESULT D3DCompileFromFile(
   [out, optional] ID3DBlob               **ppErrorMsgs
 );
 ```
-���⼭ `pFileName`�� ���̴� ������ ����̴�. `pEntrypoint`�� `winMain`�� ���� ���̴� ���Ͽ��� ������ ��ġ�̴�. OpenGL 3.3�� `main`���� �����ϴ� �Ͱ� �ٸ��� ���� ���Ͽ� vertex�� fragment shader�� �ڵ带 �� ���� �� �ִ� ���̴�. [`pTarget`](https://learn.microsoft.com/ko-kr/windows/win32/direct3dhlsl/specifying-compiler-targets)�� ���ؼ� �������� ������ ������ �� �ִ�.
+- `pFileName` : 셰이더 파일의 경로이다.
+- `pEntrypoint` : `winMain`과 같이 셰이더 파일에서 시작할 위치이다. OpenGL 3.3이 `main`에서 시작하는 것과 다르게 같은 파일에 vertex와 fragment shader의 코드를 다 넣을 수 있다.
+- `pTarget` : 통해서 컴파일할 [셰이더의 종류](https://learn.microsoft.com/ko-kr/windows/win32/direct3dhlsl/specifying-compiler-targets)를 지정할 수 있다.
 
+<center>
+<div markdown="1">
+
+|셰이더 대상|설명|
 |---|---|
-|cs_5_0 |DirectCompute 5.0(��ǻ�� ���̴�)|
-|ds_5_0	|������ ���̴�|
-|gs_5_0	|���� ���� ���̴�|
-|hs_5_0	|�� ���̴�|
-|ps_5_0	|�ȼ� ���̴�|
-|vs_5_0	|������ ���̴�|
-|---|---|
+|`cs_5_0`|DirectCompute 5.0(컴퓨팅 셰이더)|
+|`ds_5_0`|도메인 셰이더|
+|`gs_5_0`|기하 도형 셰이더|
+|`hs_5_0`|헐 셰이더|
+|`ps_5_0`|픽셀 셰이더|
+|`vs_5_0`|꼭짓점 셰이더|
+
+</div>
+</center>
+
+- `ID3DBlob` : [블롭](https://learn.microsoft.com/en-us/previous-versions/windows/desktop/legacy/ff728743(v=vs.85))은 가변 길이의 데이터를 저장할 수 있는 인터페이스로 아무렇게나 쓰일 수 있다.
+- `ppCode` : 컴파일된 코드의 포인터이다. 
+
+그 외에도 `pDefines`를 통해서 매크로의 `define`을 정의할 수 있고, `pInclude`를 통해서 특정 파일을 include 할 수 있다.
+
+
+# 셰이더 오브젝트 생성
+셰이더 파일을 바이너리 코드로 컴파일 했다면, 다음에는 해당 코드를 디바이스가 쓸 수 있도록 셰이더 오브젝트로 변경한다. 이는 `Create___Shader`를 통해서 가능하다.
+```cpp
+// Create the vertex shader
+hr = g_pd3dDevice->CreateVertexShader( pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &g_pVertexShader );
+if( FAILED( hr ) )
+{	
+	pVSBlob->Release();
+    return hr;
+}
+```
+
+# input layout 정의
+이번 예제의 꼭짓점(vertex) 셰이더 파일은 이렇게 생겼다.
+```hlsl
+float4 VS( float4 Pos : POSITION ) : SV_POSITION
+{
+    return Pos;
+}
+```
+`D3DCompileFromFile`을 통해서 진입점(`pEntrypoint`)을 `VS`로 잡았기에, GPU는 컴파일된 셰이더 코드에서 `VS`를 진입점으로 잡는다. 진입점이 `VS`이기 때문에 GPU는 `float4`를 입력으로 받아야하는 것도 알지만, 우리는 `float4`가 어떻게 구성되어 있는지 알려줘야 하고, 이를 input layout이라고 한다. 
+```cpp
+// Define the input layout
+D3D11_INPUT_ELEMENT_DESC layout[] =
+{
+    { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+};
+UINT numElements = ARRAYSIZE( layout );
+```
+
+layout은 먼저 [D3D11_INPUT_ELEMENT_DESC](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_input_element_desc)라는 구조체에 넣는다. 각 [의미 체계](https://learn.microsoft.com/ko-kr/windows/win32/direct3dhlsl/dx-graphics-hlsl-semantics)마다 하나씩 정의한다. 
+```cpp
+typedef struct D3D11_INPUT_ELEMENT_DESC {
+  LPCSTR                     SemanticName;
+  UINT                       SemanticIndex;
+  DXGI_FORMAT                Format;
+  UINT                       InputSlot;
+  UINT                       AlignedByteOffset;
+  D3D11_INPUT_CLASSIFICATION InputSlotClass;
+  UINT                       InstanceDataStepRate;
+} D3D11_INPUT_ELEMENT_DESC;
+```
+여기서 `SemanticName`은 position, texCoord, ... 등과 같은 의미 체계로, 셰이더 파일의 입력과 일치해야 한다. `SemanticIndex`은 중복되는 의미 체계를 사용할 때 이용한다. 예를 들어, `{ "Position", 2, ...}`은 셰이더의 input의 `POSITION2` semantic에 연결된다. `InputSlot`은 어느 슬롯에서 해당 데이터가 들어오는지 정의한다. 슬롯은 `IASetVertexBuffers`에서 버퍼를 등록할 때 정의된다. 
+
+
+이 구조체를 이전에 컴파일한 버텍스 셰이더에서 사용할 수 있도록 `CreateInputLayout` 함수를 통해 Direct3D 인터페이스인 `ID3D11InputLayout`로 변경한다. 그리고 최종적으로 디바이스 컨텍스트에서 사용할 수 있게 등록(`IASetInputLayout`)한다. OpenGL의 `glVertexAttribPointer`의 비슷한 과정이다.
+```cpp
+// Create the input layout
+hr = g_pd3dDevice->CreateInputLayout( layout, numElements, pVSBlob->GetBufferPointer(),
+                                        pVSBlob->GetBufferSize(), &g_pVertexLayout );
+pVSBlob->Release();
+if( FAILED( hr ) )
+    return hr;
+
+// Set the input layout
+g_pImmediateContext->IASetInputLayout( g_pVertexLayout );
+```
+
+픽셀 셰이더도 input layout의 정의가 빠진 채로 동일한 과정으로 진행된다. 직전 단계(버텍스 셰이더)의 output이 곧 픽셀 셰이더의 input이기 때문이다.
+```cpp
+// Compile the pixel shader
+ID3DBlob* pPSBlob = nullptr;
+hr = CompileShaderFromFile( L"Tutorial02.fxh", "PS", "ps_4_0", &pPSBlob );
+if( FAILED( hr ) )
+{
+MessageBox( nullptr,
+            L"The FX file cannot be compiled.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK );
+return hr;
+}
+
+// Create the pixel shader
+hr = g_pd3dDevice->CreatePixelShader( pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &g_pPixelShader );
+pPSBlob->Release();
+if( FAILED( hr ) )
+return hr;
+```

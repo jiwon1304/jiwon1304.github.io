@@ -1,0 +1,83 @@
+---
+layout: post
+title:  "버텍스 버퍼 등록"
+categories: DirectX
+tags: [directx]
+---
+> 이 글은 [directx11 튜토리얼 코드](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/C%2B%2B/Direct3D11/Tutorials/Tutorial02/Tutorial02.cpp)를 기준으로 합니다.
+
+셰이더를 다 정의하고 등록했으면, 이제 실제 그려질 버텍스 데이터를 넣어볼 차례이다. 
+```cpp
+// Create vertex buffer
+SimpleVertex vertices[] =
+{
+    XMFLOAT3( 0.0f, 0.5f, 0.5f ),
+    XMFLOAT3( 0.5f, -0.5f, 0.5f ),
+    XMFLOAT3( -0.5f, -0.5f, 0.5f ),
+};
+D3D11_BUFFER_DESC bd = {};
+bd.Usage = D3D11_USAGE_DEFAULT;
+bd.ByteWidth = sizeof( SimpleVertex ) * 3;
+bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+bd.CPUAccessFlags = 0;
+
+D3D11_SUBRESOURCE_DATA InitData = {};
+InitData.pSysMem = vertices;
+hr = g_pd3dDevice->CreateBuffer( &bd, &InitData, &g_pVertexBuffer );
+if( FAILED( hr ) )
+    return hr;
+
+// Set vertex buffer
+UINT stride = sizeof( SimpleVertex );
+UINT offset = 0;
+g_pImmediateContext->IASetVertexBuffers( 0, 1, &g_pVertexBuffer, &stride, &offset );
+
+// Set primitive topology
+g_pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
+
+return S_OK;
+```
+# 버퍼 생성
+버퍼는 `CreateBuffer`를 통해서 만들 수 있다. 이 때 버퍼를 설명해주는 [`D3D11_BUFFER_DESC`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_buffer_desc) `*pDesc`과, 실제 버텍스 데이터인 [`D3D11_SUBRESOURCE_DATA`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/ns-d3d11-d3d11_subresource_data) `*pInitialData`가 필요하다. `CreateBuffer`에서는 버퍼 내부의 버텍스와 그 데이터가 어떤 구조로 되어 있는지 기술하지는 않는다.
+```cpp
+HRESULT CreateBuffer(
+  [in]            const D3D11_BUFFER_DESC      *pDesc,
+  [in, optional]  const D3D11_SUBRESOURCE_DATA *pInitialData,
+  [out, optional] ID3D11Buffer                 **ppBuffer
+);
+```
+```cpp
+typedef struct D3D11_BUFFER_DESC {
+  UINT        ByteWidth;
+  D3D11_USAGE Usage;
+  UINT        BindFlags;
+  UINT        CPUAccessFlags;
+  UINT        MiscFlags;
+  UINT        StructureByteStride;
+} D3D11_BUFFER_DESC;
+```
+```cpp
+typedef struct D3D11_SUBRESOURCE_DATA {
+  const void *pSysMem;
+  UINT       SysMemPitch;
+  UINT       SysMemSlicePitch;
+} D3D11_SUBRESOURCE_DATA;
+```
+
+# 버퍼 바인딩
+두 구조체를 정의한 후 `CreateBuffer`를 통해서 만들어낸 버퍼 오브젝트를 디바이스 컨텍스트에 바인딩한다. [`IASetVertexBuffers`](https://learn.microsoft.com/ko-kr/windows/win32/api/d3d11/nf-d3d11-id3d11devicecontext-iasetvertexbuffers)를 통해서 바인딩하고, `IASetPrimitiveTopology`를 통해서 정점을 어떻게 그릴지 정한다.
+```cpp
+void IASetVertexBuffers(
+  [in]           UINT         StartSlot,
+  [in]           UINT         NumBuffers,
+  [in, optional] ID3D11Buffer * const *ppVertexBuffers,
+  [in, optional] const UINT   *pStrides,
+  [in, optional] const UINT   *pOffsets
+);
+```
+Input Assembler 단계의 함수인만큼, `IA`의 접두사를 가진다. 입력 슬롯의 번호와 개수는 이전에 디바이스 컨텍스트 등록한 input layout에 따라간다. 또한 stride, offset를 정의할 수 있고 `ppVertexBuffers`를 통해서 실제 버퍼 오브젝트를 넣는다. 
+
+---
+출처 :
+<https://blog.naver.com/sorkelf/40162437338>
+<https://velog.io/@billionaire/입력-조립기1-정점과-입력-배치input-layout>
