@@ -291,7 +291,9 @@ HRESULT D3D11CreateDevice(
   [out, optional] ID3D11DeviceContext     **ppImmediateContext
 );
 ```
-`pAdapter`는 그래픽스 어댑터를 의미한다. 스왑 체인과 동일하게 DXGI에서 관리하고 있는 것을 확인할 수 있다. `NULL`을 넘겨주면 자동으로 DXGI가 관리해준다. `Software`는 소프트웨어 래스터라이저인데, 특별히 쓰는 것이 아니니 마찬가지로 `NULL`를 넘겨준다. `SDKVersion`은 `D3D11_SDK_VERSION`을 이용한다. 하드웨어에게 해당 디바이스가 어떤 SDK 버전을 쓰는지 알려주는 용도인데, MS 문서에서는 그냥 `D3D11_SDK_VERSION`을 쓰라고 적혀있다. 
+`pAdapter`는 그래픽스 어댑터를 의미한다. 스왑 체인과 동일하게 DXGI에서 관리하고 있는 것을 확인할 수 있다. `NULL`을 넘겨주면 자동으로 DXGI가 관리해준다. `Software`는 소프트웨어 드라이버를 사용할때 이용한다. `SDKVersion`은 `D3D11_SDK_VERSION`을 이용한다. 하드웨어에게 해당 디바이스가 어떤 SDK 버전을 쓰는지 알려주는 용도인데, MS 문서에서는 그냥 `D3D11_SDK_VERSION`을 쓰라고 적혀있다. 
+
+`pFeatureLevels`에 `NULL`을 쓰면 자동으로 가장 높은 feature level을 이용한다. 
 
 `**ppDevice`, `*pFeatureLevel`, `**ppImmediateContext`은 디바이스 생성이 성공하면 사용되는 디바이스, 피쳐 레벨, 디바이스 컨텍스트를 알려준다. 
 
