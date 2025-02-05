@@ -1,0 +1,10 @@
+---
+layout: post
+title:  "DirectX"
+categories: DirectX
+tags: [directx]
+---
+> 출처 : Introduction to 3D game programming with directx 11
+
+# XNA Math Library
+Direct3D 11 부터는 XNA Math Library을 이용하여 SIMD를 활용한다. 
