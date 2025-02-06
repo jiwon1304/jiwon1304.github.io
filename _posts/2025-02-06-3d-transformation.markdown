@@ -219,7 +219,8 @@ $$
 1. $\textrm{vResult} \leftarrow (w,\  w ,\  w ,\  w)$
 2. $\textrm{vResult} \leftarrow (w,\  w ,\  w ,\  w) \odot (m_{41},\  m_{42},\  m_{43},\  m_{44}) = (m_{41}w,\  m_{42}w,\  m_{43}w,\  m_{44}w)$
 3. $\textrm{vTemp} \leftarrow (z,\  z ,\  z ,\  z)$
-4. $\textrm{vTemp} \leftarrow (z,\  z ,\  z ,\  z) \odot (m_{31},\  m_{32},\  m_{33},\  m_{34}) = (m_{31}w,\  m_{32}w,\  m_{33}w,\  m_{34}w)\\ \textrm{vResult} \leftarrow \textrm{vResult} + \textrm{vTemp} = (m_{31}z + m_{41}w,\  m_{32}z + m_{42}w,\  m_{33}z + m_{43}w,\  m_{34}z + m_{44}w)$
+4. $\textrm{vTemp} \leftarrow (z,\  z ,\  z ,\  z) \odot (m_{31},\  m_{32},\  m_{33},\  m_{34}) = (m_{31}w,\  m_{32}w,\  m_{33}w,\  m_{34}w)$
+   $\textrm{vResult} \leftarrow \textrm{vResult} + \textrm{vTemp} = (m_{31}z + m_{41}w,\  m_{32}z + m_{42}w,\  m_{33}z + m_{43}w,\  m_{34}z + m_{44}w)$
 
 결국 예상했던 값이 값이 나온다.
 $\textrm{vResult} = (m_{11}x + m_{21}y + m_{31}z + m_{41}w,\  m_{12}x + m_{22}y + m_{32}z + m_{42}w,\  m_{13}x + m_{23}y + m_{33}z + m_{43}w,\  m_{14}x + m_{24}y + m_{34}z + m_{44}w)$
