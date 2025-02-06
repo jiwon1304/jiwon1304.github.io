@@ -7,7 +7,7 @@ tags: [directx]
 > 출처 : <https://learn.microsoft.com/en-us/windows/win32/dxmath/directxmath-portal>
 
 # DirectXMath
-현재는 이전의 XNA Math Library대신 DirectXMath가 쓰인다. VS2012이후 기본적으로 Windows SDK에 포함되어있어서 `#include <DirectXMath.h>`만을 통해서 사용할 수 있다. `XMVECTOR`는 SIMD 하드웨어 register(`__m128`)의 proxy라고 보면 된다. 데이터를 저장할 땐 16비트에 맞춰서 메모리에 정렬되어야하는데, 64비트 프로그램에서는 자동으로 정렬된다. 반면, 32비트 프로그램의 경우에는 heap에서 8비트 단위로 정렬되기 때문에 직접 메모리를 정렬해야한다. 
+DirectXMath는 이전의 XNA Math Library를 대체하는 새로운 수학 라이브러리이다. VS2012이후 기본적으로 Windows SDK에 포함되어있어서 `#include <DirectXMath.h>`만을 통해서 사용가능하다. `XMVECTOR`는 SIMD 하드웨어 register(`__m128`)의 proxy라고 보면 된다. 데이터를 저장할 땐 16비트에 맞춰서 메모리에 정렬되어야하는데, 64비트 프로그램에서는 자동으로 정렬된다. 반면, 32비트 프로그램의 경우에는 heap에서 8비트 단위로 정렬되기 때문에 직접 메모리를 정렬해야한다. 
 
 ## 사용법
 1. 상수 값으로 사용하려면 `XMVECTORF32`를 이용한다. 변수로 이용하려면 `XMVectorSet`를 이용한다. 
@@ -41,6 +41,8 @@ XMFLOAT4A t;
 XMStoreFloat4A( &t, v );
 ```
 
-5. [컴파일 옵션은 `/fp:fast`를 줘야한다.](https://learn.microsoft.com/en-us/windows/win32/dxmath/pg-xnamath-optimizing#use-correct-compilation-settings) Visual Studio에서 프로젝트의 속성에 들어가 `구성 속성 > C/C++ > 코드 생성 > 부동 소수점 모델`에서 변경 가능하다. 
+5. [컴파일 옵션은 `/fp:fast`가 추천된다.](https://learn.microsoft.com/en-us/windows/win32/dxmath/pg-xnamath-optimizing#use-correct-compilation-settings) Visual Studio에서 프로젝트의 속성에 들어가 `구성 속성 > C/C++ > 코드 생성 > 부동 소수점 모델`에서 변경 가능하다. 
 
-6. align되어야 SIMD를 잘 활용할 수 있기에, 가능하면 함수든 struct이든 뒤에 접미사로 `A`가 붙은 타입을 써야한다.
+6. align되어야 SIMD를 잘 활용할 수 있기에, 가능하면 함수든 struct이든 뒤에 접미사로 `A`가 붙은 타입을 써야한다. 클래스 멤버에서는 가급적 `XMVECTOR`보다 `XMFLOATn`을 쓰는 것이 좋다. 
+
+그 외에도 코드 최적화는 [MS 문서](https://learn.microsoft.com/en-us/windows/win32/dxmath/ovw-xnamath-progguide)를 참고하면 좋다.
