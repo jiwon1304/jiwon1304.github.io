@@ -23,10 +23,7 @@ tags: [directx]
 
 ## Frustum-sphere intersection의 false positive
 
-<p align="center">
-  <img src="/assets/img33.png" align="center" width="90%">
-</p>
-
+![img](/assets/img33.png)
 
 - frustum의 4개의 평면(near / far를 제외)를 기준으로, sphere는 내부에 존재
     - 평면은 무한하므로 frustum 밖에서 교차할 수 있다.
@@ -38,9 +35,7 @@ tags: [directx]
         
         - note that $p_0\cdot\mathbf{n}=Ap_x+Bp_y+Cp_z=-D$
             
-<p align="center">
-  <img src="/assets/img34.png" align="center" width="90%">
-</p>
+![img](/assets/img34.png)
             
         - 여기서 $0<\rho<R$ 일 때, plane을 기준으로 positive한 방향에 있고, 거리가 $R$ 보다 작다.
             - Frustum의 평면의 방정식을 만들 때, normal이 어떤 방향인지에 따라서 부등호가 달라짐
@@ -52,9 +47,7 @@ tags: [directx]
     - plane intersection으로 negative를 모두 걸러내고, true/false positive에 대해서만 적용
     - plane only(17ms) / ray only(24ms) / plane + ray(17ms)
         
-<p align="center">
-  <img src="/assets/img35.png" align="center" width="90%">
-</p>
+![img](/assets/img35.png)
         
     - 하지만 ray와 intersection하지 않는 것은 false negative로 바뀌어버림
         - 가장 확실한건 AABB를 사용하는 것
@@ -128,14 +121,10 @@ tags: [directx]
         ```
         
 
-<aside>
-💡
-
-Compute Shader에 바인딩되어있는 resource view는 바인딩이 풀리기 전까지 다른 shader stage에서 사용할 수 없다. (write를 수반하므로) 따라서 compute shader에서 사용이 끝나면 꼭 바인딩을 풀어줘야한다.  
-
-`D3D11 WARNING: ID3D11DeviceContext::PSSetShaderResources: Resource being set to PS shader resource slot 17 is still bound on output! Forcing to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD]`
-
-</aside>
+- Compute Shader에 바인딩되어있는 resource view는 바인딩이 풀리기 전까지 다른 shader stage에서 사용할 수 없다. (write를 수반하므로) 따라서 compute shader에서 사용이 끝나면 꼭 바인딩을 풀어줘야한다.  
+```plain
+D3D11 WARNING: ID3D11DeviceContext::PSSetShaderResources: Resource being set to PS shader resource slot 17 is still bound on output! Forcing to NULL. [ STATE_SETTING WARNING #7: DEVICE_PSSETSHADERRESOURCES_HAZARD]
+```
 
 ## heatmap
 
@@ -143,18 +132,14 @@ Compute Shader에 바인딩되어있는 resource view는 바인딩이 풀리기 
     - heatmap을 기존의 RTV에 alpha값을 준채로 그려서 해당 타일에 들어가는 광원의 갯수를 시각화
     - → 한 타일에 들어가는 광원의 수가 제한보다 많을 경우(=빨간색) 최대 값을 조절. scene에 맞는 값을 찾는데 이용
     
-<p align="center">
-  <img src="/assets/img36.png" align="center" width="90%">
-</p>
+![img](/assets/img36.png)
 
 ## Compute Shader
 
 - CUDA의 DirectX 버전
 - `DeviceContext::Dispatch()` 로 ThreadGroup의 개수를 설정할 수 있고 셰이더 코드에서 `[numthreads(NumThread, 1, 1)]` 를 통해서 group내의 thread 개수를 설정할 수 있음
 
-<p align="center">
-  <img src="/assets/img37.png" align="center" width="90%">
-</p>
+![img](/assets/img37.png)
 
 - 실행되는 thread의 위치를 알려주는 키워드 제공
     - `SV_GroupThreadID`, `SV_GroupID`, `SV_DispatchThreadID`, `SV_GroupIndex`
@@ -208,10 +193,10 @@ groupshared uint SharedLightCount;
         if (intersects)
         {
             uint index;
-            **InterlockedAdd(SharedLightCount, 1, index); // 각 thread한테 index 부여**
+            InterlockedAdd(SharedLightCount, 1, index); // 각 thread한테 index 부여
             if (index < MAX_NUM_INDICES_PER_TILE)
             {
-                **SharedLightIndices[index] = LightIndex; // 각 thread가 자신의 index에 기록**
+                SharedLightIndices[index] = LightIndex; // 각 thread가 자신의 index에 기록
             }
         }
     }
@@ -275,8 +260,8 @@ groupshared uint SharedLightNumIndices[NumThread];
         {
             if (LocalLightNumIndex < MAX_NUM_INDICES_PER_TILE)
             {
-                      **// thread가 groupshared된 2차원 배열에서 자신의 index에 해당하는 배열저장**
-                **SharedLightIndices[localThreadID][LocalLightNumIndex] = LightIndex;**
+                // thread가 groupshared된 2차원 배열에서 자신의 index에 해당하는 배열저장
+                SharedLightIndices[localThreadID][LocalLightNumIndex] = LightIndex;
                 LocalLightNumIndex++;
             }
         }
@@ -293,7 +278,7 @@ groupshared uint SharedLightNumIndices[NumThread];
     {
         uint SharedLightCount = 0;
 
-     ****   for (uint tid = 0; tid < NumThread; ++tid)
+        for (uint tid = 0; tid < NumThread; ++tid)
         {
             for (uint LocalIndex = 0; LocalIndex < SharedLightNumIndices[tid]; ++LocalIndex)
             {
@@ -302,9 +287,9 @@ groupshared uint SharedLightNumIndices[NumThread];
                     TileLightIndicesListCS[tileIndex].LightCount = SharedLightCount;
                     return;
                 }
-                **// tid==0가 모든 thread가 기록한 배열을 돌면서 하나씩 기록
+                // tid==0가 모든 thread가 기록한 배열을 돌면서 하나씩 기록
                 TileLightIndicesListCS[tileIndex].LightIndices[SharedLightCount++]
-                = SharedLightIndices[tid][LocalIndex];**
+                = SharedLightIndices[tid][LocalIndex];
             }
         }
         TileLightIndicesListCS[tileIndex].LightCount = SharedLightCount;
