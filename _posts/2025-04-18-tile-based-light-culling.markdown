@@ -34,9 +34,7 @@ tags: [directx]
         $$
         
         - note that $p_0\cdot\mathbf{n}=Ap_x+Bp_y+Cp_z=-D$
-            
 ![img](/assets/img34.png)
-            
         - 여기서 $0<\rho<R$ 일 때, plane을 기준으로 positive한 방향에 있고, 거리가 $R$ 보다 작다.
             - Frustum의 평면의 방정식을 만들 때, normal이 어떤 방향인지에 따라서 부등호가 달라짐
 
@@ -46,9 +44,7 @@ tags: [directx]
     - plane intersection보다 느림
     - plane intersection으로 negative를 모두 걸러내고, true/false positive에 대해서만 적용
     - plane only(17ms) / ray only(24ms) / plane + ray(17ms)
-        
 ![img](/assets/img35.png)
-        
     - 하지만 ray와 intersection하지 않는 것은 false negative로 바뀌어버림
         - 가장 확실한건 AABB를 사용하는 것
 - AABB를 이용해서 확인(미구현)
