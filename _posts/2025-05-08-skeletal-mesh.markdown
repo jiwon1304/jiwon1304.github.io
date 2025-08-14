@@ -72,56 +72,56 @@ FBX에는 정점(vertex)을 두 가지 형태로 관리한다. 정점의 위치 
 - 두 개의 좌표계를 이용 : Model Space($M$), Joint Space($J$)
 - bind pose($B$), current pose($C$) : animation 전과 후
 
-- bind pose의 모델 좌표계에 존재하는 vertex $\bold v_M^B$ 에 대해서, 모델 좌표계에서의 새로운 위치 $\bold v_M^C$를 구하고 싶다.
+- bind pose의 모델 좌표계에 존재하는 vertex $\mathbf v_M^B$ 에 대해서, 모델 좌표계에서의 새로운 위치 $\mathbf v_M^C$를 구하고 싶다.
 - **joint space에서의 vertex는 joint가 어떻게 변형되든지 항상 유지된다.**  이 점을 이용하면
     1. model space의 bind pose position에 위치한 vertex를 joint space로 변환시킨다.
     2. joint를 current pose로 이동시킨다.
     3. 다시 vertex를 model space로 변환시킨다.
 
 - 이를 숫자로 표현하면
-    1. $\bold v_M^B(4,6)$을 joint space에서의 위치인 $\bold v_j(1,3)$으로 변환한다.
-        - 이제 joint가 얼마나 움직이든 $\bold v_j=(1,3)$은 변하지 않는다.
-    2. joint를 움직인다. 이 때 $\bold v_M^C$는 $(18,2)$로 이동한다.
+    1. $\mathbf v_M^B(4,6)$을 joint space에서의 위치인 $\mathbf v_j(1,3)$으로 변환한다.
+        - 이제 joint가 얼마나 움직이든 $\mathbf v_j=(1,3)$은 변하지 않는다.
+    2. joint를 움직인다. 이 때 $\mathbf v_M^C$는 $(18,2)$로 이동한다.
     3. 여기서 $(4,6)$을 $(18,2)$로 옮기는 것이 skinning transformation이다
 
 ![img39.png](/assets/img39.png)
 
 - 수학으로 표현하면
-    - joint $j$에 대해서 bind pose를 $\bold B_{b\rightarrow M}$으로 표현할 수 있다.
+    - joint $j$에 대해서 bind pose를 $\mathbf B_{b\rightarrow M}$으로 표현할 수 있다.
         - 이 행렬은 joint $j$에서의 벡터나 점을 model space의 벡터와 점으로 바꾸게 한다.
-    1. $\bold v_j = \bold v_M^B \bold B_{M\rightarrow j} = \bold v_M^B (\bold B_{j\rightarrow M})^{-1}$ 
-    2. joint의 current pose $\bold C_{j\rightarrow M}$에 대해서, $\bold v_M^C = \bold v_j \bold C_{j\rightarrow M}$
-    3. skinning matrix $\bold K_j = (\bold B_{j\rightarrow M})^{-1} \bold C_{j\rightarrow M}$ 
+    1. $\mathbf v_j = \mathbf v_M^B \mathbf B_{M\rightarrow j} = \mathbf v_M^B (\mathbf B_{j\rightarrow M})^{-1}$ 
+    2. joint의 current pose $\mathbf C_{j\rightarrow M}$에 대해서, $\mathbf v_M^C = \mathbf v_j \mathbf C_{j\rightarrow M}$
+    3. skinning matrix $\mathbf K_j = (\mathbf B_{j\rightarrow M})^{-1} \mathbf C_{j\rightarrow M}$ 
         
         $$
-        \bold v_M^C = \bold v_j \bold C_{j\rightarrow M} = \bold v_M^B (\bold B_{j\rightarrow M})^{-1} \bold C_{j\rightarrow M} = \bold v_M^B \bold K_j 
+        \mathbf v_M^C = \mathbf v_j \mathbf C_{j\rightarrow M} = \mathbf v_M^B (\mathbf B_{j\rightarrow M})^{-1} \mathbf C_{j\rightarrow M} = \mathbf v_M^B \mathbf K_j 
         $$
         
 
 ### Multijointed Skeletons
 
-- single jointed에서의 $\bold B_{j\rightarrow M}$과 $\bold C_{j \rightarrow M}$이 multi-joined에선 joint를 따라서 곱해져야함
-- skinning matrix $\bold K_j$는 각 joint $j$에 대해서 각각 구해져야 한다.
-    - 이때 $\bold K_j$의 배열을 **matrix pallete**라고 한다.
-    - 렌더할 때, 각각의 vertex는 자신이 영향받는 joint의 $\bold K_j$가 곱해진다.
-- current pose matrix $\bold C_{j \rightarrow M}$는 매 프레임 변경된다.
-- 하지만 inverse bind pose matrix $(\bold B_{j\rightarrow M})^{-1}$는 constant하다.
+- single jointed에서의 $\mathbf B_{j\rightarrow M}$과 $\mathbf C_{j \rightarrow M}$이 multi-joined에선 joint를 따라서 곱해져야함
+- skinning matrix $\mathbf K_j$는 각 joint $j$에 대해서 각각 구해져야 한다.
+    - 이때 $\mathbf K_j$의 배열을 **matrix pallete**라고 한다.
+    - 렌더할 때, 각각의 vertex는 자신이 영향받는 joint의 $\mathbf K_j$가 곱해진다.
+- current pose matrix $\mathbf C_{j \rightarrow M}$는 매 프레임 변경된다.
+- 하지만 inverse bind pose matrix $(\mathbf B_{j\rightarrow M})^{-1}$는 constant하다.
     - Vertex를 model space에서 bind pose에서의 joint space까지 변환시키는 행렬
     - 다시말해, T pose 상태에서 model space에서 joint space로 좌표값(벡터, 점)을 변환시키는 행렬
     - **따라서 생성시에 cache한다.**
-- 보통은 local pose($\bold C_{j\rightarrow p(j)}$ )를 먼저 계산하고, 이후 이를 이용해서 global pose($\bold C_{j\rightarrow M}$)을 계산한다.
-- 그리고 마지막으로 $\bold K_j = (\bold B_{j\rightarrow M})^{-1} \bold C_{j\rightarrow M}$를 계산한다.
+- 보통은 local pose($\mathbf C_{j\rightarrow p(j)}$ )를 먼저 계산하고, 이후 이를 이용해서 global pose($\mathbf C_{j\rightarrow M}$)을 계산한다.
+- 그리고 마지막으로 $\mathbf K_j = (\mathbf B_{j\rightarrow M})^{-1} \mathbf C_{j\rightarrow M}$를 계산한다.
 
 ## 이번 코드와의 비교
 
 | 항목 | 기호 | 저장 위치 |
 | --- | --- | --- |
-| Local bind pose | $\bold C_{j\rightarrow p(j)}$  | `USkeletalMesh::RefSkeleton::RawRefBonePose` (파싱 시)
+| Local bind pose | $\mathbf C_{j\rightarrow p(j)}$  | `USkeletalMesh::RefSkeleton::RawRefBonePose` (파싱 시)
 `USkeletalMeshComponent::OverrideSkinningTransform` (포즈 변경 시) |
-| Inverse bind pose | $(\bold B_{j\rightarrow M})^{-1}$ | `USkeletalMesh::InverseBindPoseMatrix` |
-| Global bind pose | $\bold C_{j\rightarrow M}$  | 매 프레임 직접 계산 |
-| Vertex | $\bold v_M^B$ | `USkeletalMesh::RenderData::RenderSections`  |
-| Skinning matrix | $\bold K_j$  | `USkeletalMeshComponent::GetSkinningMatrices()` 에서 매 프레임 계산 |
+| Inverse bind pose | $(\mathbf B_{j\rightarrow M})^{-1}$ | `USkeletalMesh::InverseBindPoseMatrix` |
+| Global bind pose | $\mathbf C_{j\rightarrow M}$  | 매 프레임 직접 계산 |
+| Vertex | $\mathbf v_M^B$ | `USkeletalMesh::RenderData::RenderSections`  |
+| Skinning matrix | $\mathbf K_j$  | `USkeletalMeshComponent::GetSkinningMatrices()` 에서 매 프레임 계산 |
 
 # Code
 
