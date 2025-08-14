@@ -209,6 +209,7 @@ void FRenderer::Render()
 <summary> C++ 코드 </summary>
 
 <div markdown="1">
+
 ```cpp
 HRESULT FRenderer::CreateUAV()
 {
@@ -393,7 +394,8 @@ TArray<UINT> FRenderer::ReadValidUUID()
 <summary> Shader 코드 </summary>
 
 <div markdown="1">
-```cpp
+
+```c
 #include "ShaderBuffers.hlsl"
 
 // UAV 선언

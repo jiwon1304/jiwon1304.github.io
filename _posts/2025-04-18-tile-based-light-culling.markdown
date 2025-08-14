@@ -1,13 +1,13 @@
 ---
 layout: post
 title:  "Tile-based Light Culling"
-categories: DirectX
+categories: Graphics
 tags: [directx]
 ---
 # idea
 
 - naive한 라이트 계산은 모든 광원을 iterate하면서 라이트 계산을 했음.
-    - pointlight와 spotlight의 경우에는 attenuation radius가 있어서 영향을 받지 않는 pixel이 생기지만, 일단 iterate 하면서 자신이 영향을 받는지(=거리가 먼지) 확인해야 함
+    - pointlight와 spotlight의 경우에는 attenuation radius가 있어서 영향을 받지 않는 pixel이 생기지만, 일단 픽셀은 모든 광원에 대해서 iterate 하면서 자신이 영향을 받는지(=거리가 먼지) 확인해야 함
     - 월드 상에 광원이 별로 없다면 상관이 없지만, 많아지게 된다면 iterate하는 cost가 큼
     - → pixel이 영향을 받는 광원만 iterate하게 하자
 - Tile로 pixel을 쪼개서, per-tile로 영향을 주는 광원만을 미리 모아놓자
@@ -25,7 +25,7 @@ tags: [directx]
 
 ![img](/assets/img33.png)
 
-- frustum의 4개의 평면(near / far를 제외)를 기준으로, sphere는 내부에 존재
+- 위의 경우에는 frustum의 4개의 평면(near / far를 제외)를 기준으로 sphere는 내부에 존재한다고 판단됨
     - 평면은 무한하므로 frustum 밖에서 교차할 수 있다.
     - 평면의 방정식에 대입했을 때, 원의 중점을 $c_0$, 평면 위의 한 점을 $p_0$라고 하면, 평면과 $c_0(x_0,y_0,z_0)$ 사이의 signed distance인 $\rho$는,
         
@@ -129,6 +129,7 @@ D3D11 WARNING: ID3D11DeviceContext::PSSetShaderResources: Resource being set to 
     - → 한 타일에 들어가는 광원의 수가 제한보다 많을 경우(=빨간색) 최대 값을 조절. scene에 맞는 값을 찾는데 이용
     
 ![img](/assets/img36.png)
+scene에 xy평면에 pointlight 다수를 격자 형태로 배치
 
 ## Compute Shader
 
