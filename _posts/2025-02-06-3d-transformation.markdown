@@ -96,6 +96,7 @@ XMMATRIX A(1.0f, 0.0f, 0.0f, 0.0f,
 데이터 구조에 대한 이야기는 잠시 접어두고, 이번에는 계산하는 방법에 대해서 알아보자.
 `XMMATRIX` [문서](https://learn.microsoft.com/en-us/windows/win32/api/directxmath/ns-directxmath-xmmatrix)를 살펴보면 *pre-multiplication*이라는 말이 나온다. pre-multiplication은 벡터($\mathbf{v}$)와 행렬($M$)을 곱할 때 벡터가 왼쪽에 나온다는($\mathbf{v}\cdot M$) 것이다. 그리고 이 계산이 성립하려면 벡터($\mathbf{v}$)는 행 벡터여야 한다. 반대로 post-multiplication은 벡터를 열 벡터로 보고 행렬과의 곱은 반대 순서($M \cdot \mathbf{v}$)로 한다.  
 `DirectXMath`에서 벡터는 행벡터이다. 행벡터 $\mathbf{v}$와 행렬 $M$ 사이의 곱셈은 다음과 같이 이루어진다.
+
 $$
 \begin{equation}
 \mathbf v = \begin{bmatrix}1.0\quad 2.0\quad 3.0\quad 4.0\end{bmatrix},\ 
@@ -107,11 +108,13 @@ M = \begin{bmatrix}
 \end{bmatrix}
 \end{equation}
 $$
+
 $$
 M = \begin{equation}
 \mathbf v \cdot M = \begin{bmatrix}5.0\quad 12.0\quad 24.0\quad 4.0\end{bmatrix}
 \end{equation}
 $$
+
 $\mathbf v$를 `XMVECTOR`로 메모리 상에 저장하면 다음과 같다.
 ```
 0x0115F620  00 00 80 3f 00 00 00 40 00 00 40 40 00 00 80 40
