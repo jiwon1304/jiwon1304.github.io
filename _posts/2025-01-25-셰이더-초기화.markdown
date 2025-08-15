@@ -10,6 +10,7 @@ tags: [directx]
 <summary> 셰이더 초기화 코드 접기/펼치기 </summary>
 
 <div markdown="1">
+
 ```cpp
 //  Compile the vertex shader
 ID3DBlob* pVSBlob = nullptr;

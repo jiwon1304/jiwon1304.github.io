@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "3D Transformation"
+title:  "3D Transformation과 행렬"
 categories: DirectX
 tags: [directx]
 ---
@@ -36,26 +36,28 @@ XMMATRIX XM_CALLCONV XMMatrixPerspectiveFovLH(
 ## row-major order / column-major order
 $4\times 4$ 의 2차원 데이터를 1차원 메모리에 저장하는 방법은 두 가지가 있다. 행들을 순서대로 저장하는 방법(row-major order)와 열들을 순서대로 저장하는 방법(column-major order)이다. **데이터를 저장하는 방법일 뿐이지, 실제 계산에는 상관이 없다.** 예를 들어 다음과 같은 행렬을 1차원 메모리 주소에 저장한다고 해보자
 $$
+\begin{equation}
 M = \begin{bmatrix}
 a\ b\ c\ d\\
 e\ f\ g\ h\\
 i\ j\ k\ l\\
 m\ n\ o\ p
 \end{bmatrix}
-\\
+\end{equation}
 $$
 
 row-major order의 경우에는 `a b c d e f ...` 순서대로 메모리에 저장된다. 반대로 column-major order의 경우에는 `a e i m b f ...` 순서대로 저장된다. `DirectXMath`는 row-major이고, `HLSL`은 column-major이다.  
 
 다음 행렬 A를 메모리에 저장해보자.
 $$
+\begin{equation}
 A = \begin{bmatrix}
 1.0\quad 0.0\quad 0.0\quad 0.0\\
 0.0\quad 2.0\quad 0.0\quad 0.0\\
 0.0\quad 0.0\quad 4.0\quad 0.0\\
 1.0\quad 2.0\quad 3.0\quad 1.0
 \end{bmatrix}
-\\
+\end{equation}
 $$
 
 `XMMATRIX A`를 다음과 같이 지정하면,
@@ -95,6 +97,7 @@ XMMATRIX A(1.0f, 0.0f, 0.0f, 0.0f,
 `XMMATRIX` [문서](https://learn.microsoft.com/en-us/windows/win32/api/directxmath/ns-directxmath-xmmatrix)를 살펴보면 *pre-multiplication*이라는 말이 나온다. pre-multiplication은 벡터($\mathbf{v}$)와 행렬($M$)을 곱할 때 벡터가 왼쪽에 나온다는($\mathbf{v}\cdot M$) 것이다. 그리고 이 계산이 성립하려면 벡터($\mathbf{v}$)는 행 벡터여야 한다. 반대로 post-multiplication은 벡터를 열 벡터로 보고 행렬과의 곱은 반대 순서($M \cdot \mathbf{v}$)로 한다.  
 `DirectXMath`에서 벡터는 행벡터이다. 행벡터 $\mathbf{v}$와 행렬 $M$ 사이의 곱셈은 다음과 같이 이루어진다.
 $$
+\begin{equation}
 \mathbf v = \begin{bmatrix}1.0\quad 2.0\quad 3.0\quad 4.0\end{bmatrix},\ 
 M = \begin{bmatrix}
 1.0\quad 0.0\quad 0.0\quad 0.0\\
@@ -102,9 +105,12 @@ M = \begin{bmatrix}
 0.0\quad 0.0\quad 4.0\quad 0.0\\
 1.0\quad 2.0\quad 3.0\quad 1.0
 \end{bmatrix}
-\\
-\\
+\end{equation}
+$$
+$$
+M = \begin{equation}
 \mathbf v \cdot M = \begin{bmatrix}5.0\quad 12.0\quad 24.0\quad 4.0\end{bmatrix}
+\end{equation}
 $$
 $\mathbf v$를 `XMVECTOR`로 메모리 상에 저장하면 다음과 같다.
 ```
@@ -208,6 +214,7 @@ inline XMVECTOR XM_CALLCONV XMVector4Transform
 
 이를 다시 표현하면 다음과 같다. ($\odot$은 element-wise multiplication)
 $$
+\begin{equation}
 \mathbf v = \begin{bmatrix}x\quad y\quad z\quad w\end{bmatrix},\quad 
 M = \begin{bmatrix}
 m_{11}\quad m_{12}\quad m_{13}\quad m_{14}\\
@@ -215,6 +222,7 @@ m_{21}\quad m_{22}\quad m_{23}\quad m_{24}\\
 m_{31}\quad m_{32}\quad m_{33}\quad m_{34}\\
 m_{41}\quad m_{42}\quad m_{43}\quad m_{44}\\
 \end{bmatrix}
+\end{equation}
 $$
 1. $\textrm{vResult} \leftarrow (w,\  w ,\  w ,\  w)$
 2. $\textrm{vResult} \leftarrow (w,\  w ,\  w ,\  w) \odot (m_{41},\  m_{42},\  m_{43},\  m_{44}) = (m_{41}w,\  m_{42}w,\  m_{43}w,\  m_{44}w)$
