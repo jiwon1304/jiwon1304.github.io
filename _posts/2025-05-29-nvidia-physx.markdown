@@ -161,28 +161,21 @@ physx::PxActor* FPhysicsSolver::RegisterObject(FPhysScene* InScene, const FBodyI
 
     for (const FKBoxElem& BoxElem : AggGeom.BoxElems)
     {
-        PxBoxGeometry BoxGeometry(PxVec3(BoxElem.X, BoxElem.Y, BoxElem.Z)); // 크기
+        // Geometry(기하적 구조인데, box이므로 가로, 세로, 높이)를 등록
+        PxBoxGeometry BoxGeometry(PxVec3(BoxElem.X, BoxElem.Y, BoxElem.Z));
         PxShape* NewShape = Physics->createShape(BoxGeometry, *FPhysxSolversModule::GetModule()->DefaultMaterial); // 
         
+        // Transform(위치)를 등록
         FVector Center = BoxElem.Center;
         FQuat Quat = BoxElem.Rotation.Quaternion();
         NewShape->setLocalPose(PxTransform(PxVec3(Center.X, Center.Y, Center.Z), PxQuat(Quat.X, Quat.Y, Quat.Z, Quat.W)));
         NewRigidActor->attachShape(*NewShape);
         
+        // Volume(질량 계산을 위한 값)을 계산
         Volume = Volume + BoxElem.X * BoxElem.Y * BoxElem.Z;
     }
-
-    for (const FKSphereElem& SphereElem : AggGeom.SphereElems)
-    {
-        PxSphereGeometry SphereGeometry(SphereElem.Radius);
-        // 등록
-    }
-
-    for (const FKSphylElem& SphylElem : AggGeom.SphylElems)
-    {
-        PxCapsuleGeometry CapsuleGeometry(SphylElem.Radius, SphylElem.Length / 2.f);
-        // 등록
-    }
+    
+    // 다른 도형에 대해서도 등록한다.
 
     // Physics material (density 등)이 있으면 지정
     if (PxRigidDynamic* RigidDynamic = NewRigidActor->is<PxRigidDynamic>())
@@ -238,36 +231,19 @@ physx::PxJoint* FPhysicsSolver::CreateJoint(FPhysScene* InScene, PxActor* Child,
         physx::PxJointLinearLimit limitParams(extentVal, spring);
     }
 
-    // 각도 제한
+    // 스윙 제한
     Joint->setMotion(physx::PxD6Axis::eSWING1, FPhysicsAssetUtils::MapAngularMotionToPx(ConeLimitProps.Swing1Motion));
     Joint->setMotion(physx::PxD6Axis::eSWING2, FPhysicsAssetUtils::MapAngularMotionToPx(ConeLimitProps.Swing2Motion));
 
     if (ConeLimitProps.Swing1Motion != EAngularConstraintMotion::ACM_Free ||
         ConeLimitProps.Swing2Motion != EAngularConstraintMotion::ACM_Free)
     {
-        physx::PxReal coneStiffness = 0.0f;
-        physx::PxReal coneDamping = 0.0f;
-
-        if (ConeLimitProps.bSoftConstraint) 
-        {
-            coneStiffness = ConeLimitProps.Stiffness;
-            coneDamping = ConeLimitProps.Damping;
-        }
         physx::PxSpring spring(coneStiffness, coneDamping);
 
         //Swing2는 xz, Swing1은 xy평면에서의 제한임.
         physx::PxReal swing2Angle, swing1Angle;
 
-        if (ConeLimitProps.Swing2Motion == EAngularConstraintMotion::ACM_Locked) 
-        {
-            swing2Angle = 0.0f;
-        }
-        else 
-        { // ACM_Limited 또는 ACM_Free (이 경우 LimitDegrees 값 사용)
-            swing2Angle = FMath::DegreesToRadians(ConeLimitProps.Swing2LimitDegrees);
-        }
-
-        // swing1도 동일하게 적용
+        // 값을 적당히 처리 (rad / deg)
 
         physx::PxJointLimitCone coneLimitParams
         (
@@ -283,16 +259,8 @@ physx::PxJoint* FPhysicsSolver::CreateJoint(FPhysScene* InScene, PxActor* Child,
 
     if (TwistLimitProps.TwistMotion != EAngularConstraintMotion::ACM_Free)
     {
-        physx::PxReal twistStiffness = 0.0f;
-        physx::PxReal twistDamping = 0.0f;
-        if (TwistLimitProps.bSoftConstraint)
-        {
-            twistStiffness = TwistLimitProps.Stiffness;
-            twistDamping = TwistLimitProps.Damping;
-        }
-        physx::PxSpring spring(twistStiffness, twistDamping);
-
         physx::PxReal halfAngleRad;
+
         // 값을 적당히 처리 (rad / deg)
 
         physx::PxJointAngularLimitPair twistLimitParams
@@ -305,6 +273,7 @@ physx::PxJoint* FPhysicsSolver::CreateJoint(FPhysScene* InScene, PxActor* Child,
         Joint->setTwistLimit(twistLimitParams);
     }
 
+    // joint (constraint)에 적용
     Joint->setConstraintFlag(physx::PxConstraintFlag::eCOLLISION_ENABLED, !Profile.bDisableCollision); 
 #if _DEBUG
     Joint->setConstraintFlag(physx::PxConstraintFlag::eVISUALIZATION, true);
