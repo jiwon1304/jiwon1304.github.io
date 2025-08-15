@@ -7,7 +7,7 @@ tags: [directx]
 NVIDIA GPU에서 물리 연산을 처리해주는 NVIDIA PhysX sdk를 적용해본다. [Documentation](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/index.html)
 
 # 1. 라이브러리 등록
-PhysX sdk는 binary를 직접 빌드할 수 있게 하였다. 적용하려는 프로젝트의 런타임 라이브러리 설정(`/MD`, `/MT`)에 맞춰서 빌드한다.
+PhysX sdk는 binary를 직접 빌드할 수 있게 하였다. 적용하려는 프로젝트의 런타임 라이브러리 설정(`/MD`, `/MT`)에 맞춰서 빌드한다. 프로젝트에는 기본적으로 다음을 링크한다.
 ```
 PhysX_64.lib
 PhysXFoundation_64.lib
@@ -53,7 +53,7 @@ void FPhysxSolversModule::Initialize()
 ```
 
 # 2. Physics Scene 생성
-Physics scene은 물리 연산을 효율적으로 하기 위해서 원래의 메시 대신 proxy 도형을 이용해서 오브젝트를 표현한다. 월드 상에 존재할 메시들을 간단한 도형으로 대체해서 위치시킬 물리 씬을 생성한다. PVD를 이용하기 위해선 scene에 추가적인 함수를 호출해야한다.
+물리 씬(Physics scene)은 물리 연산을 효율적으로 하기 위해서 원래의 메시 대신 proxy 도형을 이용해서 오브젝트를 표현한다. 월드 상에 존재할 메시들을 간단한 도형으로 대체해서 위치시킬 물리 씬을 생성한다. PVD를 이용하기 위해선 scene에 추가적인 함수를 호출해야한다.
 ```cpp
 PxScene* FPhysxSolversModule::CreateScene()
 {
@@ -89,7 +89,7 @@ PxScene* FPhysxSolversModule::CreateScene()
 물리 씬 위에 올라가는 오브젝트는 `PxActor`를 상속받는다. 우리가 처리할 강체의 경우에는 그 자식 클래스인 `PxRigidBody`를 상속받는다. 
 
 강체의 경우에는 크게 두 가지로 나뉘는데, 씬 내부에서 움직이지 않는 것으로 처리되는(implicit infinite mass/inertia) `PxRigidStatic`와 씬 내부에서 움직이는 `PxRigidDynamic`이 존재한다. 자세한 내용은 [다음 문서](https://nvidia-omniverse.github.io/PhysX/physx/5.6.1/docs/RigidBodyOverview.html)를 참고.
-
+Skeletal mesh에서 하나의 body instance에 대해서 하나의 `PxActor`를 할당하였고, 이에 속하는 `FKAggregateGeom`의 강체들은 shape로 액터에 등록시켰다.
 
 ```cpp
 physx::PxActor* FPhysicsSolver::RegisterObject(FPhysScene* InScene, const FBodyInstance* NewInstance, const FMatrix& InitialMatrix)
@@ -192,7 +192,7 @@ physx::PxActor* FPhysicsSolver::RegisterObject(FPhysScene* InScene, const FBodyI
 ```
 
 # 4. Constraint를 Scene에 등록
-강체와 강체 사이의 이동을 제한하는 constraint를 추가한다. Constraint의 종류는 Unreal Engine을 따라 `Linear`, `Cone`, `Twist`로 하였다. `Linear`는 x축 방향(부모-자식 joint의 방향)으로 translation을 제한한다. `Cone`과 `Twist`는 rotation을 제한하는데, `Twist`는 x축을 기준으로 한 회전을 제한하고, `Cone`은 xy평면과 xz평면에서의 회전을 제한한다. Skeletal mesh에서 하나의 physics body에 대해서 하나의 `PxActor`를 할당하였다. 
+강체와 강체 사이의 이동을 제한하는 constraint를 추가한다. Constraint의 종류는 Unreal Engine을 따라 `Linear`, `Cone`, `Twist`로 하였다. `Linear`는 x축 방향(부모-자식 joint의 방향)으로 translation을 제한한다. `Cone`과 `Twist`는 rotation을 제한하는데, `Twist`는 x축을 기준으로 한 회전을 제한하고, `Cone`은 xy평면과 xz평면에서의 회전을 제한한다.
 ```cpp
 physx::PxJoint* FPhysicsSolver::CreateJoint(FPhysScene* InScene, PxActor* Child, PxActor* Parent, const FConstraintInstance* NewInstance)
 {
@@ -421,6 +421,8 @@ $$\begin{equation}
 <details>
 <summary> TTransform::GetRelativeTransform의 코드 일부 </summary>
 
+<div markdown="1">
+
 ```cpp
 template<typename T>
 TTransform<T> TTransform<T>::GetRelativeTransform(const TTransform<T>& Other) const
@@ -471,6 +473,7 @@ TTransform<T> TTransform<T>::GetRelativeTransform(const TTransform<T>& Other) co
 	return Result;
 }
 ```
+</div>
 </details>
 
 # 6. 결과물
