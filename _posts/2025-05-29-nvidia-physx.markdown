@@ -417,61 +417,7 @@ $$\begin{equation}
 
 `TTransform::GetRelativeTransform()`는 A * B(-1)를 계산한다. 근데 행렬 계산 기준으로는 $AB^{-1}$이지만, VQS(Vector-Quaternion-Scale) 기준으로는 $B^{-1}A$인 것으로 보인다. FTransform과 FMatrix는 [일대일 대응이 되는 체계가 아니기 때문](https://www.gradientspace.com/tutorials/2024/11/25/the-tragic-tale-of-ftransform)에 많이 헷갈렸다. 마지막에 `DEBUG_INVERSE_TRANSFORM` 매크로를 사용하는 부분을 보면 행렬 계산의 순서를 확인할 수 있다.
 
-다음은 `TTransform::GetRelativeTransform()`의 코드 일부이다. ([github](https://github.com/EpicGames/UnrealEngine/blob/6978b63c8951e57d97048d8424a0bebd637dde1d/Engine/Source/Runtime/Core/Private/Math/Transform.cpp#L168))
-<details>
-<summary> TTransform::GetRelativeTransform의 코드 일부 </summary>
-
-```cpp
-template<typename T>
-TTransform<T> TTransform<T>::GetRelativeTransform(const TTransform<T>& Other) const
-{
-	// A * B(-1) = VQS(B)(-1) (VQS (A))
-	// 
-	// Scale = S(A)/S(B)
-	// Rotation = Q(B)(-1) * Q(A)
-	// Translation = 1/S(B) *[Q(B)(-1)*(T(A)-T(B))*Q(B)]
-	// where A = this, B = Other
-	TTransform<T> Result;
-		
-	if (Other.IsRotationNormalized() == false)
-	{
-		return TTransform<T>::Identity;
-	}
-
-	if (Private_AnyHasNegativeScale(this->Scale3D, Other.Scale3D))
-	{
-		// @note, if you have 0 scale with negative, you're going to lose rotation as it can't convert back to quat
-		GetRelativeTransformUsingMatrixWithScale(&Result, this, &Other);
-	}
-	else
-	{
-		// Scale = S(A)/S(B)
-		
-		//VQTranslation = (  ( T(A).X - T(B).X ),  ( T(A).Y - T(B).Y ), ( T(A).Z - T(B).Z), 0.f );
-
-		// Inverse RotatedTranslation
-
-		//Translation = 1/S(B)
-	
-		// Rotation = Q(B)(-1) * Q(A)	
-
-		Result.Scale3D = VScale3D;
-		Result.Translation = VTranslation;
-		Result.Rotation = VRotation;
-
-		Result.DiagnosticCheckNaN_All();
-#if DEBUG_INVERSE_TRANSFORM
-		TMatrix<T> AM = ToMatrixWithScale();
-		TMatrix<T> BM = Other.ToMatrixWithScale();
-
-		Result.DebugEqualMatrix(AM *  BM.InverseFast());
-#endif
-	}
-
-	return Result;
-}
-```
-</details>
+다음은 `TTransform::GetRelativeTransform()`의 코드이다. ([github](https://github.com/EpicGames/UnrealEngine/blob/6978b63c8951e57d97048d8424a0bebd637dde1d/Engine/Source/Runtime/Core/Private/Math/Transform.cpp#L168))
 
 # 6. 결과물
 PVD와 제대로 연결했다면, 생성된 `PxScene`를 시각화하고 녹화할 수 있다.
