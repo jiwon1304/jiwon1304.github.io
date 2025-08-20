@@ -310,6 +310,10 @@ PS_INPUT_SkeletalMesh mainVS(VS_INPUT_SkeletalMesh Input, uint id: SV_VertexID)
 ```
 constant buffer로 bone matrices를 넘긴다. bone의 개수와 무관하게 constant buffer의 크기는 런타임에 변경을 하지 못하기 때문에 bone matrices의 개수를 적절한 수로 제한을 한다. 또한 메시 중에서 bone weight가 4개 이상인 경우가 있었기에, 이를 고려해서 bone weight를 8개까지 받도록 한다.
 
+### 잘못된 Bone weight 적용
+만약 weight의 합이 1이 아닐 경우에는 $1-\sum w_i$만큼 원점에 weight가 적용된 것으로 계산이 된다. 따라서 몇몇 vertex가 원점으로 늘어나게 된다. 내 경우에는 bone weight가 5개 이상인데 4개만 처리해버렸을 때 다음과 같은 현상이 발생했다. 다리 사이로 몸통의 vertex가 길게 늘어나있다.
+![](/assets/img50.png) 
+
 ## Performance
 ![alt text](/assets/img42.png)
 CPU Skinnning에 비해 GPU Skinning는 두 배 정도의 성능 향상을 보여줬는데, 이는 병렬 계산의 이점이라기 보다는 CPU skinned된 vertex buffer를 매번 생성하는 과정에서 생긴 오버헤드라고 볼 수 있다.
