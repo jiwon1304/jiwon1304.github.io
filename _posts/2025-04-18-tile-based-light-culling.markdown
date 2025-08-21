@@ -292,3 +292,8 @@ groupshared uint SharedLightNumIndices[NumThread];
         TileLightIndicesListCS[tileIndex].LightCount = SharedLightCount;
     }
 ```
+
+# 결과
+$2^{14}$개의 pointlight에 대해서 >60fps 달성
+다만, 광원이 너무 멀리있으면 (화면상에서 < 8px) light가 작동하지 않음.
+![](/assets/img51.png)
